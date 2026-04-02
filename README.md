@@ -6,6 +6,7 @@ One `git clone` + `docker compose up` gets a complete bookstore running with pre
 
 ## Table of Contents
 
+- [Run from Docker Hub](#run-from-docker-hub)
 - [Quick Start](#quick-start)
 - [Architecture](#architecture)
 - [Frontend](#frontend)
@@ -16,16 +17,62 @@ One `git clone` + `docker compose up` gets a complete bookstore running with pre
 - [CI/CD](#cicd)
 - [Contributing](#contributing)
 
+## Run from Docker Hub
+
+No need to clone — pull the pre-built images directly:
+
+```yaml
+# docker-compose.yml
+services:
+  frontend:
+    image: umutayb/book-hive-frontend:latest
+    ports:
+      - "7547:80"
+    depends_on:
+      - backend
+
+  backend:
+    image: umutayb/book-hive-backend:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/bookhive
+      JWT_SECRET: change-me-in-production-use-a-strong-random-secret-at-least-64-bytes
+
+  mongodb:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+```
+
+```bash
+docker compose up
+curl -X POST http://localhost:8080/api/seed
+```
+
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:7547 |
+| Backend API | http://localhost:8080 |
+| Swagger UI | http://localhost:8080/swagger-ui.html |
+
 ## Quick Start
 
 ### Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose
 
-### Run
+### Run from Source
 
 ```bash
-git clone https://github.com/civitas-cerebrum/book-hive.git
+git clone https://github.com/umutayb/book-hive.git
 cd book-hive
 docker compose up --build
 ```
@@ -122,7 +169,7 @@ book-hive/
 
 | Context | Purpose | Persistence |
 |---------|---------|-------------|
-| `AuthContext` | User session, JWT token, login/logout | `localStorage` (`bookhive_token`) |
+| `AuthContext` | User session, JWT token, login/logout | HttpOnly cookie (`bookhive_token`) |
 | `CartContext` | Shopping cart items, add/remove/update | Server-side (API) |
 | `ThemeContext` | Dark/light mode toggle | `localStorage` (`bookhive_theme`) |
 
@@ -336,8 +383,8 @@ This builds and pushes two images to Docker Hub:
 
 | Image | Source |
 |-------|--------|
-| `civitascerebrum/bookhive-backend` | `backend/Dockerfile` |
-| `civitascerebrum/bookhive-frontend` | `frontend/Dockerfile` |
+| `umutayb/book-hive-backend` | `backend/Dockerfile` |
+| `umutayb/book-hive-frontend` | `frontend/Dockerfile` |
 
 **Required GitHub Secrets:**
 
@@ -353,7 +400,7 @@ This builds and pushes two images to Docker Hub:
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/<your-username>/book-hive.git
+   git clone https://github.com/umutayb/book-hive.git
    cd book-hive
    ```
 3. Create a feature branch:

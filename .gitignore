@@ -31,3 +31,6 @@ mongo-data/
 
 # Claude
 .claude/
+
+# Release notes
+RELEASE_NOTES.md

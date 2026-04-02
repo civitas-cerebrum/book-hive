@@ -47,7 +47,7 @@ export default function SignupPage() {
         <div className={styles.field}>
           <label htmlFor="password">Password</label>
           <input id="password" type="password" data-testid="signup-password" value={password}
-                 onChange={e => setPassword(e.target.value)} required minLength={6} />
+                 onChange={e => setPassword(e.target.value)} required minLength={8} />
         </div>
         <button type="submit" className={styles.submitBtn} data-testid="signup-submit" disabled={loading}>
           {loading ? 'Creating account...' : 'Create Account'}

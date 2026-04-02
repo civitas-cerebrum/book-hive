@@ -6,6 +6,7 @@ import com.bookhive.dto.SignupRequest;
 import com.bookhive.model.User;
 import com.bookhive.repository.UserRepository;
 import com.bookhive.security.JwtUtil;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +38,9 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
+            .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials");
+            throw new BadCredentialsException("Invalid credentials");
         }
         String token = jwtUtil.generateToken(user.getId(), user.getEmail());
         return new AuthResponse(token, user.getId(), user.getUsername(), user.getEmail(), user.getBalance());

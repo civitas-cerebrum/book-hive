@@ -1,6 +1,5 @@
 package com.bookhive.controller;
 
-import com.bookhive.dto.ErrorResponse;
 import com.bookhive.dto.ListingRequest;
 import com.bookhive.model.MarketplaceListing;
 import com.bookhive.security.UserPrincipal;
@@ -33,33 +32,21 @@ public class MarketplaceController {
     @Operation(summary = "Create a new listing")
     public ResponseEntity<?> createListing(@AuthenticationPrincipal UserPrincipal principal,
                                            @Valid @RequestBody ListingRequest request) {
-        try {
-            return ResponseEntity.ok(marketplaceService.createListing(principal.getId(), request));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("listing_error", e.getMessage()));
-        }
+        return ResponseEntity.ok(marketplaceService.createListing(principal.getId(), request));
     }
 
     @PostMapping("/listings/{id}/buy")
     @Operation(summary = "Buy a marketplace listing")
     public ResponseEntity<?> buyListing(@AuthenticationPrincipal UserPrincipal principal,
                                         @PathVariable String id) {
-        try {
-            return ResponseEntity.ok(marketplaceService.buyListing(principal.getId(), id));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("buy_error", e.getMessage()));
-        }
+        return ResponseEntity.ok(marketplaceService.buyListing(principal.getId(), id));
     }
 
     @DeleteMapping("/listings/{id}")
     @Operation(summary = "Cancel own listing")
     public ResponseEntity<?> cancelListing(@AuthenticationPrincipal UserPrincipal principal,
                                            @PathVariable String id) {
-        try {
-            marketplaceService.cancelListing(principal.getId(), id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("cancel_error", e.getMessage()));
-        }
+        marketplaceService.cancelListing(principal.getId(), id);
+        return ResponseEntity.ok().build();
     }
 }

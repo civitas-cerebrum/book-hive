@@ -24,7 +24,10 @@ public class BookController {
                               @RequestParam(required = false) String genre,
                               @RequestParam(defaultValue = "0") int page,
                               @RequestParam(defaultValue = "12") int size) {
-        return bookService.findAll(query, genre, page, size);
+        if (query != null && query.length() > 100) {
+            query = query.substring(0, 100);
+        }
+        return bookService.findAll(query, genre, page, Math.min(size, 100));
     }
 
     @GetMapping("/{id}")

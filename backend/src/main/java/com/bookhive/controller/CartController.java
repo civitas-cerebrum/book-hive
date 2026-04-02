@@ -1,7 +1,7 @@
 package com.bookhive.controller;
 
 import com.bookhive.dto.CartItemRequest;
-import com.bookhive.dto.ErrorResponse;
+import com.bookhive.dto.CartItemUpdateRequest;
 import com.bookhive.model.CartItem;
 import com.bookhive.security.UserPrincipal;
 import com.bookhive.service.CartService;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -34,35 +33,23 @@ public class CartController {
     @Operation(summary = "Add item to cart")
     public ResponseEntity<?> addItem(@AuthenticationPrincipal UserPrincipal principal,
                                      @Valid @RequestBody CartItemRequest request) {
-        try {
-            return ResponseEntity.ok(cartService.addItem(principal.getId(), request));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("cart_error", e.getMessage()));
-        }
+        return ResponseEntity.ok(cartService.addItem(principal.getId(), request));
     }
 
     @PutMapping("/items/{id}")
     @Operation(summary = "Update cart item quantity")
     public ResponseEntity<?> updateItem(@AuthenticationPrincipal UserPrincipal principal,
                                         @PathVariable String id,
-                                        @RequestBody Map<String, Integer> body) {
-        try {
-            return ResponseEntity.ok(cartService.updateItem(principal.getId(), id, body.get("quantity")));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("cart_error", e.getMessage()));
-        }
+                                        @Valid @RequestBody CartItemUpdateRequest body) {
+        return ResponseEntity.ok(cartService.updateItem(principal.getId(), id, body.quantity()));
     }
 
     @DeleteMapping("/items/{id}")
     @Operation(summary = "Remove item from cart")
     public ResponseEntity<?> removeItem(@AuthenticationPrincipal UserPrincipal principal,
                                         @PathVariable String id) {
-        try {
-            cartService.removeItem(principal.getId(), id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("cart_error", e.getMessage()));
-        }
+        cartService.removeItem(principal.getId(), id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping

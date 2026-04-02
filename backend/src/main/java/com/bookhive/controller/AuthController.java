@@ -1,10 +1,8 @@
 package com.bookhive.controller;
 
 import com.bookhive.dto.AuthResponse;
-import com.bookhive.dto.ErrorResponse;
 import com.bookhive.dto.LoginRequest;
 import com.bookhive.dto.SignupRequest;
-import com.bookhive.model.User;
 import com.bookhive.repository.UserRepository;
 import com.bookhive.security.UserPrincipal;
 import com.bookhive.service.AuthService;
@@ -34,26 +32,18 @@ public class AuthController {
     @Operation(summary = "Register a new user")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest request,
                                     HttpServletResponse response) {
-        try {
-            AuthResponse auth = authService.signup(request);
-            addTokenCookie(response, auth.token());
-            return ResponseEntity.ok(auth);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("signup_failed", e.getMessage()));
-        }
+        AuthResponse auth = authService.signup(request);
+        addTokenCookie(response, auth.token());
+        return ResponseEntity.ok(auth);
     }
 
     @PostMapping("/login")
     @Operation(summary = "Login with email and password")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request,
                                    HttpServletResponse response) {
-        try {
-            AuthResponse auth = authService.login(request);
-            addTokenCookie(response, auth.token());
-            return ResponseEntity.ok(auth);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(401).body(new ErrorResponse("login_failed", e.getMessage()));
-        }
+        AuthResponse auth = authService.login(request);
+        addTokenCookie(response, auth.token());
+        return ResponseEntity.ok(auth);
     }
 
     @PostMapping("/logout")

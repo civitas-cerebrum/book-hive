@@ -1,6 +1,5 @@
 package com.bookhive.controller;
 
-import com.bookhive.dto.ErrorResponse;
 import com.bookhive.model.Order;
 import com.bookhive.security.UserPrincipal;
 import com.bookhive.service.OrderService;
@@ -24,11 +23,7 @@ public class OrderController {
     @PostMapping
     @Operation(summary = "Checkout cart into an order")
     public ResponseEntity<?> checkout(@AuthenticationPrincipal UserPrincipal principal) {
-        try {
-            return ResponseEntity.ok(orderService.checkout(principal.getId()));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("checkout_error", e.getMessage()));
-        }
+        return ResponseEntity.ok(orderService.checkout(principal.getId()));
     }
 
     @GetMapping
@@ -50,10 +45,6 @@ public class OrderController {
     @Operation(summary = "Return an order (within 10-minute window)")
     public ResponseEntity<?> returnOrder(@AuthenticationPrincipal UserPrincipal principal,
                                          @PathVariable String id) {
-        try {
-            return ResponseEntity.ok(orderService.returnOrder(principal.getId(), id));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("return_error", e.getMessage()));
-        }
+        return ResponseEntity.ok(orderService.returnOrder(principal.getId(), id));
     }
 }

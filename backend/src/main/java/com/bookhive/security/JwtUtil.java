@@ -26,7 +26,7 @@ public class JwtUtil {
                 .claim("email", email)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(key)
+                .signWith(key, io.jsonwebtoken.Jwts.SIG.HS256)
                 .compact();
     }
 

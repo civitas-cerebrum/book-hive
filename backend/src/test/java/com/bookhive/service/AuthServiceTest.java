@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import org.springframework.security.authentication.BadCredentialsException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -52,7 +54,7 @@ class AuthServiceTest {
     @Test
     void login_wrongPassword_throws() {
         authService.signup(new SignupRequest("testuser", "test@example.com", "password123"));
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(BadCredentialsException.class, () ->
             authService.login(new LoginRequest("test@example.com", "wrongpassword")));
     }
 }

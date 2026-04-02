@@ -8,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/books")
 @Tag(name = "Books", description = "Book catalog endpoints")
@@ -36,5 +39,31 @@ public class BookController {
         return bookService.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/discount")
+    @Operation(summary = "Calculate discounted price for a book")
+    public ResponseEntity<Map<String, Object>> getDiscountedPrice(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "10") int discountPercent) {
+
+        return bookService.findById(id).map(book -> {
+            double originalPrice = book.getPrice();
+
+            // BUG: adds instead of subtracts
+            double discountedPrice = originalPrice + (originalPrice * discountPercent / 100);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("bookId", book.getId());
+            result.put("title", book.getTitle());
+            result.put("originalPrice", originalPrice);
+            result.put("discountPercent", discountPercent);
+            result.put("discountedPrice", discountedPrice);
+
+            // BUG: stock decremented on read
+            book.setStock(book.getStock() - 1);
+
+            return ResponseEntity.ok(result);
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

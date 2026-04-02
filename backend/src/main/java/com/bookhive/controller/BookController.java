@@ -37,4 +37,10 @@ public class BookController {
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/count")
+    @Operation(summary = "Get total book count")
+    public ResponseEntity<Long> getBookCount() {
+        return ResponseEntity.ok(bookService.findAll(null, null, 0, 1).getTotalElements());
+    }
 }

@@ -1,72 +1,115 @@
 name: M-O QA
 
 on:
+  # PR Mode — triggered on pull request events
   pull_request:
     types: [opened, synchronize]
   issue_comment:
     types: [created]
 
-# Only run on PR comments that mention @m-o
-# For PR events, always run
+  # Monitor Mode — triggered when test jobs fail
+  workflow_run:
+    workflows: ["CI", "Tests", "maven"]
+    types: [completed]
+
+  # Onboarding / Manual — triggered manually from Actions tab
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Operating mode'
+        required: true
+        default: 'onboard'
+        type: choice
+        options:
+          - onboard
+          - monitor
+          - pr
+
 jobs:
-  qa:
-    name: M-O QA Analysis
+  # ─── PR Mode ───────────────────────────────────────────
+  pr-qa:
+    name: M-O PR Analysis
     runs-on: ubuntu-latest
     if: >
       github.event_name == 'pull_request' ||
       (github.event_name == 'issue_comment' &&
        github.event.issue.pull_request &&
        contains(github.event.comment.body, '@m-o'))
-
-    services:
-      backend:
-        image: openjdk:17-slim
-        ports:
-          - 8080:8080
-      frontend:
-        image: nginx:alpine
-        ports:
-          - 3000:80
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Start BookHive
+      - name: Start app
         run: docker-compose up -d
 
       - name: Wait for app
         run: |
-          echo "Waiting for app to be ready..."
           for i in $(seq 1 30); do
-            if curl -s http://localhost:8080/api/health > /dev/null 2>&1; then
-              echo "App is ready!"
-              break
-            fi
+            curl -s http://localhost:8080/api/health > /dev/null 2>&1 && break
             sleep 2
           done
 
-      # When M-O is published to a private registry, use:
-      # - name: Run M-O
-      #   uses: docker://ghcr.io/your-org/m-o:latest
-      #   with:
-      #     args: pr .mo/config.yml
-      #   env:
-      #     ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # For now: placeholder step (replace when binary is published)
-      - name: Run M-O
+      - name: Run M-O (PR Mode)
         run: |
-          echo "M-O would run here with:"
-          echo "  Mode: pr"
+          echo "M-O PR Analysis:"
           echo "  Repo: ${{ github.repository }}"
-          echo "  PR: ${{ github.event.pull_request.number }}"
+          echo "  PR: #${{ github.event.pull_request.number }}"
           echo "  Base: ${{ github.event.pull_request.base.ref }}"
           echo "  Head: ${{ github.event.pull_request.head.ref }}"
-          echo ""
-          echo "To enable: publish M-O Docker image to a private registry"
-          echo "and uncomment the docker step above."
+          echo "  Placeholder — enable when M-O Docker image is published"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ─── Monitor Mode ──────────────────────────────────────
+  monitor:
+    name: M-O Pipeline Monitor
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'failure') ||
+      (github.event_name == 'workflow_dispatch' &&
+       github.event.inputs.mode == 'monitor')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run M-O (Monitor Mode)
+        run: |
+          echo "M-O Pipeline Monitor:"
+          echo "  Repo: ${{ github.repository }}"
+          echo "  Branch: ${{ github.event.workflow_run.head_branch || github.ref_name }}"
+          echo "  Failed run: ${{ github.event.workflow_run.id || 'manual' }}"
+          echo "  Placeholder — enable when M-O Docker image is published"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ─── Onboarding Mode ───────────────────────────────────
+  onboard:
+    name: M-O Onboarding
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.mode == 'onboard'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start app
+        run: docker-compose up -d
+
+      - name: Wait for app
+        run: |
+          for i in $(seq 1 30); do
+            curl -s http://localhost:8080/api/health > /dev/null 2>&1 && break
+            sleep 2
+          done
+
+      - name: Run M-O (Onboarding Mode)
+        run: |
+          echo "M-O Onboarding:"
+          echo "  Repo: ${{ github.repository }}"
+          echo "  Branch: mo/onboarding"
+          echo "  Target coverage: 70%"
+          echo "  Placeholder — enable when M-O Docker image is published"
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -509,3 +509,4 @@ Open an issue with:
 - Browser/environment details (for UI issues)
 - API request/response details (for backend issues)
 <!-- Live Claude API test -->
+<!-- QA live test Fri Apr  3 00:07:12 CEST 2026 -->

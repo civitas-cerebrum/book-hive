@@ -508,3 +508,4 @@ Open an issue with:
 - Expected vs actual behaviour
 - Browser/environment details (for UI issues)
 - API request/response details (for backend issues)
+<!-- QA trigger test -->

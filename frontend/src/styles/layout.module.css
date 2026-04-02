@@ -1,0 +1,20 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 24px;
+  transition: margin-left 0.3s ease;
+}
+
+@media (max-width: 767px) {
+  .main {
+    margin-left: 0;
+    padding-top: calc(var(--topbar-height) + 16px);
+    padding: 16px;
+    padding-top: calc(var(--topbar-height) + 16px);
+  }
+}

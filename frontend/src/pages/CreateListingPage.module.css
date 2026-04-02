@@ -1,0 +1,11 @@
+.container { max-width: 500px; margin: 60px auto; }
+.title { font-size: 24px; margin-bottom: 24px; }
+.form { display: flex; flex-direction: column; gap: 16px; }
+.field label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+.field select, .field input { width: 100%; padding: 10px 14px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; color: var(--text-primary); font-size: 14px; }
+.field select:focus, .field input:focus { outline: none; border-color: var(--accent); }
+.submitBtn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: 600; }
+.submitBtn:hover { background: var(--accent-hover); }
+.submitBtn:disabled { opacity: 0.6; }
+.error { background: rgba(233, 69, 96, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 10px 14px; border-radius: 6px; font-size: 13px; }
+.success { background: rgba(72, 187, 120, 0.1); border: 1px solid #48bb78; color: #48bb78; padding: 10px 14px; border-radius: 6px; font-size: 13px; }

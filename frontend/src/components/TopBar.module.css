@@ -1,0 +1,69 @@
+.topbar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .topbar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--topbar-height);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 98;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hamburger {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 24px;
+    padding: 4px;
+  }
+
+  .logo {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .iconBtn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    position: relative;
+  }
+
+  .cartBadge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

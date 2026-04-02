@@ -1,0 +1,14 @@
+.card { background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border); padding: 16px; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.title { font-size: 14px; font-weight: 600; }
+.condition { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+.NEW { background: rgba(72, 187, 120, 0.15); color: #48bb78; }
+.LIKE_NEW { background: rgba(66, 153, 225, 0.15); color: #4299e1; }
+.GOOD { background: rgba(236, 201, 75, 0.15); color: #ecc94b; }
+.FAIR { background: rgba(160, 174, 192, 0.15); color: #a0aec0; }
+.seller { color: var(--text-secondary); font-size: 12px; margin-bottom: 12px; }
+.footer { display: flex; justify-content: space-between; align-items: center; }
+.price { color: var(--accent); font-size: 18px; font-weight: 700; }
+.buyBtn { background: var(--accent); color: white; border: none; padding: 8px 20px; border-radius: 4px; font-size: 13px; }
+.buyBtn:hover { background: var(--accent-hover); }
+.buyBtn:disabled { opacity: 0.6; }

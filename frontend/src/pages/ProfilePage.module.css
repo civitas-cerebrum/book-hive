@@ -1,0 +1,13 @@
+.container { max-width: 700px; margin: 0 auto; }
+.title { font-size: 24px; margin-bottom: 8px; }
+.email { color: var(--text-secondary); margin-bottom: 32px; }
+.section { margin-bottom: 32px; }
+.sectionTitle { font-size: 18px; margin-bottom: 16px; }
+.listings { display: flex; flex-direction: column; gap: 12px; }
+.listing { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border); }
+.listingInfo { display: flex; flex-direction: column; gap: 2px; }
+.listingTitle { font-size: 14px; font-weight: 600; }
+.listingMeta { font-size: 12px; color: var(--text-secondary); }
+.cancelBtn { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 6px 14px; border-radius: 4px; font-size: 12px; }
+.cancelBtn:hover { background: rgba(233, 69, 96, 0.1); }
+.empty { color: var(--text-secondary); font-size: 14px; }

@@ -1,0 +1,30 @@
+:root {
+  /* Dark theme (default) */
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-tertiary: #0f3460;
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --text-muted: #4a5568;
+  --accent: #e94560;
+  --accent-hover: #d63851;
+  --link: #4299e1;
+  --border: #1a1a3e;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --sidebar-width: 240px;
+  --topbar-height: 60px;
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #edf2f7;
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
+  --text-muted: #a0aec0;
+  --accent: #e94560;
+  --accent-hover: #d63851;
+  --link: #3182ce;
+  --border: #e2e8f0;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}

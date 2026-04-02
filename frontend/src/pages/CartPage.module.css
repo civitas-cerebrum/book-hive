@@ -1,0 +1,12 @@
+.container { max-width: 700px; margin: 0 auto; }
+.title { font-size: 24px; margin-bottom: 24px; }
+.items { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.footer { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border); }
+.total { font-size: 20px; font-weight: 700; }
+.totalAmount { color: var(--accent); }
+.checkoutBtn { background: var(--accent); color: white; border: none; padding: 12px 32px; border-radius: 6px; font-size: 16px; font-weight: 600; }
+.checkoutBtn:hover { background: var(--accent-hover); }
+.checkoutBtn:disabled { opacity: 0.6; }
+.empty { text-align: center; color: var(--text-secondary); padding: 48px; }
+.clearBtn { background: none; border: none; color: var(--text-secondary); font-size: 13px; cursor: pointer; }
+.clearBtn:hover { color: var(--accent); }

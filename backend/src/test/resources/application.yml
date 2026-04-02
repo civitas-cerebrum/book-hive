@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/bookhive-test
+
+jwt:
+  secret: test-secret-key-for-development-only
+  expiration: 86400000
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.0

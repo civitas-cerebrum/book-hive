@@ -1,0 +1,31 @@
+.chips {
+  display: none;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chip {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chipActive {
+  background: var(--bg-tertiary);
+  color: var(--link);
+  border-color: var(--link);
+}
+
+@media (max-width: 767px) {
+  .chips {
+    display: flex;
+  }
+}

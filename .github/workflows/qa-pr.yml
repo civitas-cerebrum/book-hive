@@ -1,0 +1,46 @@
+name: QA
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  issue_comment:
+    types: [created]
+
+jobs:
+  pr-analysis:
+    name: PR Analysis
+    runs-on: self-hosted
+    if: >
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
+       contains(github.event.comment.body, '@qa'))
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start app
+        run: docker compose up -d
+        continue-on-error: true
+
+      - name: Wait for app
+        run: |
+          for i in $(seq 1 30); do
+            curl -s http://localhost:8080/api/health > /dev/null 2>&1 && break
+            sleep 2
+          done
+        continue-on-error: true
+
+      - name: Run QA Agent
+        run: |
+          docker run --rm --network host \
+            -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
+            -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
+            -e GITHUB_EVENT_NAME="${GITHUB_EVENT_NAME}" \
+            -e GITHUB_EVENT_PATH="/event.json" \
+            -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
+            -v "${GITHUB_EVENT_PATH}:/event.json:ro" \
+            -v "$(pwd):/workspace:ro" \
+            magnum-opus:latest pr .magnum-opus/config.yml
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

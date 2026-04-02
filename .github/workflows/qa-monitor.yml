@@ -1,0 +1,28 @@
+name: Pipeline Monitor
+
+on:
+  workflow_run:
+    workflows: ["CI", "Tests", "maven", "Test"]
+    types: [completed]
+
+jobs:
+  monitor:
+    name: Diagnose Failures
+    runs-on: self-hosted
+    if: github.event.workflow_run.conclusion == 'failure'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run QA Agent
+        run: |
+          docker run --rm --network host \
+            -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
+            -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
+            -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
+            -e GITHUB_REF_NAME="${GITHUB_REF_NAME}" \
+            -e GITHUB_RUN_ID="${GITHUB_RUN_ID}" \
+            -v "$(pwd):/workspace:ro" \
+            magnum-opus:latest monitor .magnum-opus/config.yml
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

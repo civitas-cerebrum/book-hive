@@ -1,0 +1,35 @@
+name: Onboarding
+
+on:
+  workflow_dispatch:
+
+jobs:
+  onboard:
+    name: Bootstrap Test Suite
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start app
+        run: docker compose up -d
+        continue-on-error: true
+
+      - name: Wait for app
+        run: |
+          for i in $(seq 1 30); do
+            curl -s http://localhost:8080/api/health > /dev/null 2>&1 && break
+            sleep 2
+          done
+        continue-on-error: true
+
+      - name: Run QA Agent
+        run: |
+          docker run --rm --network host \
+            -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
+            -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
+            -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
+            -v "$(pwd):/workspace" \
+            magnum-opus:latest onboard .magnum-opus/config.yml
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

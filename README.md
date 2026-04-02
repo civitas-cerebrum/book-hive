@@ -510,3 +510,4 @@ Open an issue with:
 - API request/response details (for backend issues)
 <!-- Live Claude API test -->
 <!-- QA live test Fri Apr  3 00:07:12 CEST 2026 -->
+<!-- retrigger 1775167773 -->

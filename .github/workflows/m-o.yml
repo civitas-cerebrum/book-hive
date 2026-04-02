@@ -1,18 +1,13 @@
-name: M-O QA
+name: QA
 
 on:
-  # PR Mode — triggered on pull request events
   pull_request:
     types: [opened, synchronize]
   issue_comment:
     types: [created]
-
-  # Monitor Mode — triggered when test jobs fail
   workflow_run:
     workflows: ["CI", "Tests", "maven"]
     types: [completed]
-
-  # Onboarding / Manual — triggered manually from Actions tab
   workflow_dispatch:
     inputs:
       mode:
@@ -26,15 +21,14 @@ on:
           - pr
 
 jobs:
-  # ─── PR Mode ───────────────────────────────────────────
   pr-qa:
-    name: M-O PR Analysis
-    runs-on: ubuntu-latest
+    name: PR Analysis
+    runs-on: self-hosted
     if: >
       github.event_name == 'pull_request' ||
       (github.event_name == 'issue_comment' &&
        github.event.issue.pull_request &&
-       contains(github.event.comment.body, '@m-o'))
+       contains(github.event.comment.body, '@qa'))
     steps:
       - uses: actions/checkout@v4
 
@@ -48,22 +42,24 @@ jobs:
             sleep 2
           done
 
-      - name: Run M-O (PR Mode)
+      - name: Run QA Agent (PR Mode)
         run: |
-          echo "M-O PR Analysis:"
-          echo "  Repo: ${{ github.repository }}"
-          echo "  PR: #${{ github.event.pull_request.number }}"
-          echo "  Base: ${{ github.event.pull_request.base.ref }}"
-          echo "  Head: ${{ github.event.pull_request.head.ref }}"
-          echo "  Placeholder — enable when M-O Docker image is published"
+          docker run --rm --network host \
+            -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
+            -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
+            -e GITHUB_EVENT_NAME="${GITHUB_EVENT_NAME}" \
+            -e GITHUB_EVENT_PATH="/event.json" \
+            -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
+            -v "${GITHUB_EVENT_PATH}:/event.json:ro" \
+            -v "$(pwd):/workspace:ro" \
+            magnum-opus:latest pr .magnum-opus/config.yml
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # ─── Monitor Mode ──────────────────────────────────────
   monitor:
-    name: M-O Pipeline Monitor
-    runs-on: ubuntu-latest
+    name: Pipeline Monitor
+    runs-on: self-hosted
     if: >
       (github.event_name == 'workflow_run' &&
        github.event.workflow_run.conclusion == 'failure') ||
@@ -72,21 +68,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run M-O (Monitor Mode)
+      - name: Run QA Agent (Monitor Mode)
         run: |
-          echo "M-O Pipeline Monitor:"
-          echo "  Repo: ${{ github.repository }}"
-          echo "  Branch: ${{ github.event.workflow_run.head_branch || github.ref_name }}"
-          echo "  Failed run: ${{ github.event.workflow_run.id || 'manual' }}"
-          echo "  Placeholder — enable when M-O Docker image is published"
+          docker run --rm --network host \
+            -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
+            -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
+            -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
+            -e GITHUB_REF_NAME="${GITHUB_REF_NAME}" \
+            -e GITHUB_RUN_ID="${GITHUB_RUN_ID}" \
+            -v "$(pwd):/workspace:ro" \
+            magnum-opus:latest monitor .magnum-opus/config.yml
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # ─── Onboarding Mode ───────────────────────────────────
   onboard:
-    name: M-O Onboarding
-    runs-on: ubuntu-latest
+    name: Onboarding
+    runs-on: self-hosted
     if: >
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.mode == 'onboard'
@@ -103,13 +101,14 @@ jobs:
             sleep 2
           done
 
-      - name: Run M-O (Onboarding Mode)
+      - name: Run QA Agent (Onboarding Mode)
         run: |
-          echo "M-O Onboarding:"
-          echo "  Repo: ${{ github.repository }}"
-          echo "  Branch: mo/onboarding"
-          echo "  Target coverage: 70%"
-          echo "  Placeholder — enable when M-O Docker image is published"
+          docker run --rm --network host \
+            -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
+            -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
+            -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
+            -v "$(pwd):/workspace" \
+            magnum-opus:latest onboard .magnum-opus/config.yml
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

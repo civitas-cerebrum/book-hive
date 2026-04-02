@@ -1,5 +1,6 @@
 package com.bookhive.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -13,6 +14,7 @@ public class User {
     private String username;
     @Indexed(unique = true)
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private Instant createdAt;
     private double balance;

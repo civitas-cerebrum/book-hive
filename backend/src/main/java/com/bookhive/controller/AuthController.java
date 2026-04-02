@@ -10,9 +10,10 @@ import com.bookhive.security.UserPrincipal;
 import com.bookhive.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -58,11 +59,10 @@ public class AuthController {
     @PostMapping("/logout")
     @Operation(summary = "Logout (clears session cookie)")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("bookhive_token", "");
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("bookhive_token", "")
+            .httpOnly(true).path("/").maxAge(0)
+            .sameSite("Lax").build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok().build();
     }
 
@@ -76,10 +76,9 @@ public class AuthController {
     }
 
     private void addTokenCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie("bookhive_token", token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(86400);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("bookhive_token", token)
+            .httpOnly(true).path("/").maxAge(86400)
+            .sameSite("Lax").build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }

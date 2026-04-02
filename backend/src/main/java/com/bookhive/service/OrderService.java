@@ -28,24 +28,33 @@ public class OrderService {
             throw new IllegalArgumentException("Cart is empty");
         }
 
+        // Build order items and validate stock without modifying it yet
+        List<Book> booksToUpdate = new java.util.ArrayList<>();
         List<OrderItem> orderItems = cartItems.stream().map(ci -> {
             Book book = bookRepository.findById(ci.getBookId())
                 .orElseThrow(() -> new IllegalArgumentException("Book not found: " + ci.getBookId()));
             if (book.getStock() < ci.getQuantity()) {
                 throw new IllegalArgumentException("Insufficient stock for: " + book.getTitle());
             }
-            book.setStock(book.getStock() - ci.getQuantity());
-            bookRepository.save(book);
+            booksToUpdate.add(book);
             return new OrderItem(ci.getBookId(), ci.getQuantity(), book.getPrice());
         }).toList();
 
         double total = orderItems.stream()
             .mapToDouble(i -> i.getPriceAtPurchase() * i.getQuantity()).sum();
 
+        // Validate balance before modifying any data
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
         if (user.getBalance() < total) {
             throw new IllegalArgumentException("Insufficient balance");
+        }
+
+        // Now decrement stock and deduct balance
+        for (int i = 0; i < booksToUpdate.size(); i++) {
+            Book book = booksToUpdate.get(i);
+            book.setStock(book.getStock() - cartItems.get(i).getQuantity());
+            bookRepository.save(book);
         }
         user.setBalance(user.getBalance() - total);
         userRepository.save(user);

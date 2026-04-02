@@ -18,7 +18,8 @@ public class BookService {
     public Page<Book> findAll(String query, String genre, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         if (query != null && !query.isBlank()) {
-            return bookRepository.searchByTitleOrAuthor(query, pageable);
+            String sanitized = query.replaceAll("[\\\\^$.|?*+()\\[\\]{}]", "\\\\$0");
+            return bookRepository.searchByTitleOrAuthor(sanitized, pageable);
         }
         if (genre != null && !genre.isBlank()) {
             return bookRepository.findByGenre(genre, pageable);

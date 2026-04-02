@@ -3,6 +3,7 @@ package com.bookhive.service;
 import com.bookhive.dto.ListingRequest;
 import com.bookhive.model.Book;
 import com.bookhive.model.MarketplaceListing;
+import com.bookhive.model.User;
 import com.bookhive.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,25 @@ class MarketplaceServiceTest {
     @Autowired private MarketplaceListingRepository listingRepository;
     @Autowired private BookRepository bookRepository;
     @Autowired private OrderRepository orderRepository;
+    @Autowired private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
         listingRepository.deleteAll();
         orderRepository.deleteAll();
         bookRepository.deleteAll();
+        userRepository.deleteAll();
+
+        User seller = new User("seller1", "seller1@test.com", "password");
+        seller.setId("seller1");
+        seller.setBalance(0.0);
+        userRepository.save(seller);
+
+        User buyer = new User("buyer1", "buyer1@test.com", "password");
+        buyer.setId("buyer1");
+        buyer.setBalance(100.0);
+        userRepository.save(buyer);
+
         Book book = new Book();
         book.setId("book-001");
         book.setTitle("Test Book");

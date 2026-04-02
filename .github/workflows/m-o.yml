@@ -1,0 +1,72 @@
+name: M-O QA
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  issue_comment:
+    types: [created]
+
+# Only run on PR comments that mention @m-o
+# For PR events, always run
+jobs:
+  qa:
+    name: M-O QA Analysis
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
+       contains(github.event.comment.body, '@m-o'))
+
+    services:
+      backend:
+        image: openjdk:17-slim
+        ports:
+          - 8080:8080
+      frontend:
+        image: nginx:alpine
+        ports:
+          - 3000:80
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start BookHive
+        run: docker-compose up -d
+
+      - name: Wait for app
+        run: |
+          echo "Waiting for app to be ready..."
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:8080/api/health > /dev/null 2>&1; then
+              echo "App is ready!"
+              break
+            fi
+            sleep 2
+          done
+
+      # When M-O is published to a private registry, use:
+      # - name: Run M-O
+      #   uses: docker://ghcr.io/your-org/m-o:latest
+      #   with:
+      #     args: pr .mo/config.yml
+      #   env:
+      #     ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # For now: placeholder step (replace when binary is published)
+      - name: Run M-O
+        run: |
+          echo "M-O would run here with:"
+          echo "  Mode: pr"
+          echo "  Repo: ${{ github.repository }}"
+          echo "  PR: ${{ github.event.pull_request.number }}"
+          echo "  Base: ${{ github.event.pull_request.base.ref }}"
+          echo "  Head: ${{ github.event.pull_request.head.ref }}"
+          echo ""
+          echo "To enable: publish M-O Docker image to a private registry"
+          echo "and uncomment the docker step above."
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

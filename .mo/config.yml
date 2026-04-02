@@ -1,0 +1,24 @@
+framework: singularity
+tests:
+  location: in-repo
+  directory: tests/e2e
+app:
+  start-command: "docker-compose up -d"
+  base-url: "http://localhost:8080"
+  health-check: "/api/health"
+platforms:
+  - web
+behavior:
+  interactive: false
+  investigate-repo: true
+  create-issues: false
+  record-video: true
+  max-new-tests: 15
+  flake-retries: 2
+bug-discovery:
+  enabled: true
+ai-adversarial:
+  enabled: false
+onboarding:
+  target-coverage: 70
+  max-iterations: 8

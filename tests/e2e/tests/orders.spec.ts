@@ -32,9 +32,9 @@ test.describe('Orders Flow', () => {
     await steps.click('CartPage', 'checkoutBtn');
     await steps.waitForNetworkIdle();
 
-    // Should redirect to orders page after successful checkout
-    await steps.verifyUrlContains('/orders');
-    await steps.verifyPresence('OrdersPage', 'container');
+    // Should redirect to specific order detail page after successful checkout
+    await steps.verifyUrlContains('/orders/');
+    await steps.verifyPresence('OrderDetailPage', 'container');
   });
 
   test('should display order in orders list after purchase', async ({ steps }) => {
@@ -91,9 +91,8 @@ test.describe('Orders Flow', () => {
     await steps.click('CartPage', 'checkoutBtn');
     await steps.waitForNetworkIdle();
 
-    // Now go to the order detail and return it
-    await steps.verifyUrlContains('/orders');
-    await steps.click('OrdersPage', 'orderCard');
+    // After checkout, already on order detail page
+    await steps.verifyUrlContains('/orders/');
     await steps.verifyPresence('OrderDetailPage', 'returnBtn');
     await steps.click('OrderDetailPage', 'returnBtn');
     await steps.waitForNetworkIdle();

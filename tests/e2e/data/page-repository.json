@@ -126,12 +126,12 @@
       "name": "CartItemRow",
       "elements": [
         { "elementName": "row", "selector": { "css": "[data-testid^='cart-item-']:not([data-testid*='title']):not([data-testid*='price']):not([data-testid*='qty'])" } },
-        { "elementName": "title", "selector": { "css": "[data-testid^='cart-item-title-']" } },
-        { "elementName": "price", "selector": { "css": "[data-testid^='cart-item-price-']" } },
-        { "elementName": "qtyMinus", "selector": { "css": "[data-testid^='cart-qty-minus-']" } },
-        { "elementName": "qty", "selector": { "css": "span[data-testid^='cart-qty-']" } },
-        { "elementName": "qtyPlus", "selector": { "css": "[data-testid^='cart-qty-plus-']" } },
-        { "elementName": "removeBtn", "selector": { "css": "[data-testid^='cart-remove-']" } }
+        { "elementName": "title", "selector": { "css": "[data-testid^='cart-item-title-']:first-of-type" } },
+        { "elementName": "price", "selector": { "css": "[data-testid^='cart-item-price-']:first-of-type" } },
+        { "elementName": "qtyMinus", "selector": { "css": "[data-testid^='cart-qty-minus-'] >> nth=0" } },
+        { "elementName": "qty", "selector": { "css": "span[data-testid^='cart-qty-'] >> nth=0" } },
+        { "elementName": "qtyPlus", "selector": { "css": "[data-testid^='cart-qty-plus-'] >> nth=0" } },
+        { "elementName": "removeBtn", "selector": { "css": "[data-testid^='cart-remove-'] >> nth=0" } }
       ]
     },
     {
@@ -140,7 +140,8 @@
         { "elementName": "container", "selector": { "css": "[data-testid='orders-page']" } },
         { "elementName": "loading", "selector": { "css": "[data-testid='loading']" } },
         { "elementName": "noOrders", "selector": { "css": "[data-testid='no-orders']" } },
-        { "elementName": "orderCard", "selector": { "css": "[data-testid^='order-card-']" } }
+        { "elementName": "orderCard", "selector": { "css": "[data-testid^='order-card-']:first-child" } },
+        { "elementName": "orderCardAny", "selector": { "css": "[data-testid^='order-card-']" } }
       ]
     },
     {
@@ -177,10 +178,12 @@
       "name": "ListingCard",
       "elements": [
         { "elementName": "card", "selector": { "css": "[data-testid^='listing-card-']" } },
+        { "elementName": "cardFirst", "selector": { "css": "[data-testid^='listing-card-']:first-child" } },
         { "elementName": "title", "selector": { "css": "[data-testid^='listing-title-']" } },
         { "elementName": "conditionBadge", "selector": { "css": "[data-testid^='listing-condition-badge-']" } },
         { "elementName": "price", "selector": { "css": "[data-testid^='listing-price-']" } },
-        { "elementName": "buyBtn", "selector": { "css": "[data-testid^='listing-buy-']" } }
+        { "elementName": "buyBtn", "selector": { "css": "[data-testid^='listing-buy-']" } },
+        { "elementName": "buyBtnFirst", "selector": { "css": "[data-testid^='listing-buy-']:first-of-type" } }
       ]
     },
     {
@@ -203,7 +206,8 @@
         { "elementName": "balance", "selector": { "css": "[data-testid='profile-balance']" } },
         { "elementName": "noListings", "selector": { "css": "[data-testid='no-listings']" } },
         { "elementName": "myListing", "selector": { "css": "[data-testid^='my-listing-']" } },
-        { "elementName": "cancelListingBtn", "selector": { "css": "[data-testid^='cancel-listing-']" } }
+        { "elementName": "myListingFirst", "selector": { "css": "[data-testid^='my-listing-']:first-child" } },
+        { "elementName": "cancelListingBtn", "selector": { "css": "[data-testid^='cancel-listing-'] >> nth=0" } }
       ]
     },
     {

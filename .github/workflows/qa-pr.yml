@@ -1,0 +1,15 @@
+name: QA PR Review
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  qa-review:
+    name: QA Agent Review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: QA PR Review
+        run: echo "QA Agent PR review will be configured separately"

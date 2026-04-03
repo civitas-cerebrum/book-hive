@@ -32,5 +32,12 @@ mongo-data/
 # Claude
 .claude/
 
+# E2E Tests
+tests/e2e/node_modules/
+tests/e2e/test-results/
+tests/e2e/playwright-report/
+tests/e2e/blob-report/
+tests/e2e/dist/
+
 # Release notes
 RELEASE_NOTES.md

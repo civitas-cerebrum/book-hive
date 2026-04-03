@@ -1,0 +1,16 @@
+name: QA Test Discovery
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 * * 1'
+
+jobs:
+  discover:
+    name: QA Agent Test Discovery
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: QA Test Discovery
+        run: echo "QA Agent test discovery will be configured separately"

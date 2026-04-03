@@ -117,7 +117,7 @@
       "elements": [
         { "elementName": "container", "selector": { "css": "[data-testid='marketplace-page']" } },
         { "elementName": "noListings", "selector": { "css": "[data-testid='no-listings']" } },
-        { "elementName": "listingCards", "selector": { "css": "[data-testid='marketplace-page'] .listing-card" } },
+        { "elementName": "listingCards", "selector": { "css": "[data-testid^='listing-card-']" } },
         { "elementName": "heading", "selector": { "css": "[data-testid='marketplace-page'] h1" } },
         { "elementName": "buyButtons", "selector": { "css": "button[data-testid^='listing-buy-']" } }
       ]

@@ -42,42 +42,18 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-  qa-analysis:
+  qa:
     name: QA Analysis
     needs: [backend-tests, frontend-build]
     if: always()
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-
-      - name: Start app
-        run: |
-          docker compose down 2>/dev/null || true
-          docker compose up -d --build --wait
-        timeout-minutes: 5
-
-      - name: Wait for app
-        run: |
-          for i in $(seq 1 30); do
-            curl -s http://localhost:8080/api/health | grep -q healthy && exit 0
-            sleep 2
-          done
-
-      - name: Run QA Agent
-        run: |
-          docker run --rm --network host \
-            -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
-            -e GITHUB_TOKEN="${GH_PAT}" \
-            -e GITHUB_EVENT_NAME="${GITHUB_EVENT_NAME}" \
-            -e GITHUB_EVENT_PATH="/event.json" \
-            -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
-            -v "${GITHUB_EVENT_PATH}:/event.json:ro" \
-            -v "$(pwd):/workspace:ro" \
-            magnum-opus:latest pr .magnum-opus/config.yml
+      - name: Analyze
+        run: qa-run pr
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GH_PAT: ${{ secrets.GH_PAT }}
-
-      - name: Stop app
-        if: always()
-        run: docker compose down 2>/dev/null || true
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}

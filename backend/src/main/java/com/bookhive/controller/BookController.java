@@ -49,8 +49,6 @@ public class BookController {
 
         return bookService.findById(id).map(book -> {
             double originalPrice = book.getPrice();
-
-            // BUG: adds instead of subtracts
             double discountedPrice = originalPrice + (originalPrice * discountPercent / 100);
 
             Map<String, Object> result = new HashMap<>();
@@ -60,15 +58,9 @@ public class BookController {
             result.put("discountPercent", discountPercent);
             result.put("discountedPrice", discountedPrice);
 
-            // BUG: stock decremented on read
             book.setStock(book.getStock() - 1);
 
             return ResponseEntity.ok(result);
         }).orElse(ResponseEntity.notFound().build());
     }
 }
-// trigger
-// agentic
-// fix
-// slim
-// ratelimit

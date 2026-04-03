@@ -1,0 +1,20 @@
+{
+  "name": "bookhive-e2e",
+  "version": "1.0.0",
+  "description": "E2E tests for BookHive application",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:chromium": "npx playwright test --project=chromium",
+    "test:debug": "npx playwright test --debug",
+    "test:ui": "npx playwright test --ui",
+    "report": "npx playwright show-report",
+    "test:bug-discovery": "npx playwright test --grep @bug-discovery"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@civitas-cerebrum/element-interactions": "^0.1.8",
+    "@playwright/test": "^1.59.1"
+  }
+}

@@ -1,0 +1,103 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            tests/e2e/node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('tests/e2e/package-lock.json', 'frontend/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Start backend
+        working-directory: backend
+        run: |
+          ./mvnw spring-boot:run &
+          sleep 30
+        env:
+          SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/bookhive
+
+      - name: Start frontend (preview mode)
+        working-directory: frontend
+        run: |
+          npm run preview -- --port 7547 &
+          sleep 5
+
+      - name: Install E2E test dependencies
+        working-directory: tests/e2e
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Reset database
+        run: curl -X POST http://localhost:8080/api/reset || true
+
+      - name: Run E2E tests
+        working-directory: tests/e2e
+        run: npx playwright test --project=chromium
+        env:
+          CI: true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/e2e/playwright-report/
+          retention-days: 30
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-results
+          path: tests/e2e/test-results/
+          retention-days: 7

@@ -2,7 +2,7 @@
 
 ## Summary
 
-During E2E test automation, **2 bugs** were discovered through adversarial probing. Both bugs relate to missing user feedback for error conditions.
+During E2E test automation, **3 bugs** were discovered through adversarial probing. Two bugs relate to missing user feedback for error conditions, and one is a UX issue with authentication flow.
 
 ---
 
@@ -112,11 +112,98 @@ The following selectors should be added for proper error testing:
 
 ---
 
+---
+
+## Bug #3: Authenticated Users Can Access Login/Signup Pages
+
+| Field | Value |
+|-------|-------|
+| **ID** | BUG-003 |
+| **Severity** | Low |
+| **Area** | Authentication / Routing / UX |
+| **Status** | Confirmed |
+| **Reproduction Test** | `tests/bug-discovery/auth-redirect.spec.ts` |
+
+### Description
+Users who are already logged in can navigate directly to the `/login` and `/signup` pages. They see the authentication forms while their balance and logout button are still displayed in the sidebar.
+
+### Steps to Reproduce
+1. Login with valid credentials
+2. Verify you see your balance and logout button in the sidebar
+3. Navigate directly to `/login`
+4. **Observe:** Login form is displayed while sidebar shows authenticated state
+5. Navigate directly to `/signup`
+6. **Observe:** Signup form is displayed while sidebar shows authenticated state
+
+### Expected Behavior
+Authenticated users should be:
+- Redirected to the home page when accessing `/login` or `/signup`
+- OR shown a message indicating they are already logged in
+
+### Actual Behavior
+- The login/signup form is fully displayed
+- Sidebar continues to show authenticated state (balance, logout button)
+- Forms are functional and could be submitted
+- No redirect or warning is provided
+
+### Business Impact
+- Confusing user experience: Shows auth form while user is already authenticated
+- Could lead to accidental duplicate account creation attempts
+- Potential session/state conflicts if forms are submitted
+
+### Technical Notes
+- Missing route guards in React Router configuration
+- LoginPage and SignupPage components don't check authentication state
+- The auth context is available but not used for redirects
+
+---
+
+## Recommendations
+
+### Immediate Actions
+1. **Add error handling to LoginPage**: Catch API errors and display a generic "Invalid credentials" message
+2. **Add error handling to CartPage**: Catch checkout errors and display specific messages based on error type (insufficient funds, out of stock, etc.)
+3. **Add route guards**: Redirect authenticated users away from `/login` and `/signup`
+
+### UI Components Needed
+Both pages need an error message display component:
+```jsx
+{error && (
+  <div data-testid="error-message" className="error-message">
+    {error}
+  </div>
+)}
+```
+
+### Route Guards
+Add authentication checks to auth pages:
+```jsx
+// In LoginPage.jsx and SignupPage.jsx:
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+export default function LoginPage() {
+  const { user } = useAuth();
+  if (user) return <Navigate to="/" replace />;
+  // ... rest of component
+}
+```
+
+### Testing Selectors
+The following selectors should be added for proper error testing:
+- `[data-testid="error-message"]` on LoginPage
+- `[data-testid="error-message"]` on CartPage
+- Consider `[data-testid="error-message"]` on SignupPage as well
+
+---
+
 ## Test Evidence
 
-Both bugs have automated reproduction tests in the `tests/bug-discovery/` directory:
+All bugs have automated reproduction tests in the `tests/bug-discovery/` directory:
 - `login-error-missing.spec.ts` - Demonstrates BUG-001
 - `checkout-error-missing.spec.ts` - Demonstrates BUG-002
+- `checkout-no-error.spec.ts` - Additional evidence for BUG-002
+- `auth-redirect.spec.ts` - Demonstrates BUG-003
 
 These tests:
 1. Trigger the error condition
@@ -127,3 +214,13 @@ Run bug discovery tests:
 ```bash
 npx playwright test tests/bug-discovery/ --project=chromium
 ```
+
+---
+
+## Bug Severity Matrix
+
+| Bug ID | Severity | Priority | Impact |
+|--------|----------|----------|--------|
+| BUG-001 | Medium | P2 | User confusion on login |
+| BUG-002 | High | P1 | Direct conversion impact |
+| BUG-003 | Low | P3 | Minor UX inconsistency |

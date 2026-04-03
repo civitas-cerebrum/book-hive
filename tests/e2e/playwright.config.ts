@@ -17,8 +17,13 @@ export default defineConfig({
   },
   projects: [
     {
+      name: 'setup',
+      testMatch: /global-setup\.spec\.ts/,
+    },
+    {
       name: 'chromium',
       use: { browserName: 'chromium' },
+      dependencies: ['setup'],
     },
   ],
 });

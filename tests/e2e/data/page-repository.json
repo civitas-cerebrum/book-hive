@@ -1,0 +1,128 @@
+{
+  "Navigation": {
+    "sidebar": "[data-testid='sidebar']",
+    "logo": "[data-testid='logo']",
+    "allBooksLink": "[data-testid='nav-all-books']",
+    "marketplaceLink": "[data-testid='nav-marketplace']",
+    "loginLink": "[data-testid='nav-login']",
+    "signupLink": "[data-testid='nav-signup']",
+    "cartLink": "[data-testid='nav-cart']",
+    "ordersLink": "[data-testid='nav-orders']",
+    "sellLink": "[data-testid='nav-sell']",
+    "profileLink": "[data-testid='nav-profile']",
+    "logoutButton": "[data-testid='logout-btn']",
+    "cartBadge": "[data-testid='cart-badge']",
+    "userBalance": "[data-testid='user-balance']",
+    "genreFilterFiction": "[data-testid='genre-filter-fiction']",
+    "genreFilterSciFi": "[data-testid='genre-filter-sci-fi']",
+    "genreFilterNonFiction": "[data-testid='genre-filter-non-fiction']",
+    "genreFilterBiography": "[data-testid='genre-filter-biography']",
+    "genreFilterFantasy": "[data-testid='genre-filter-fantasy']",
+    "genreFilterMystery": "[data-testid='genre-filter-mystery']"
+  },
+  "HomePage": {
+    "container": "[data-testid='home-page']",
+    "bookGrid": "[data-testid='book-grid']",
+    "searchInput": "[data-testid='search-input']",
+    "loadingBooks": "[data-testid='loading-books']",
+    "noBooks": "[data-testid='no-books']",
+    "pagination": "[data-testid='pagination']",
+    "nextPage": "[data-testid='next-page']",
+    "prevPage": "[data-testid='prev-page']"
+  },
+  "BookCard": {
+    "cardTemplate": "[data-testid='book-card-{id}']",
+    "titleTemplate": "[data-testid='book-title-{id}']",
+    "authorTemplate": "[data-testid='book-author-{id}']",
+    "priceTemplate": "[data-testid='book-price-{id}']",
+    "genreTemplate": "[data-testid='book-genre-{id}']",
+    "addToCartTemplate": "[data-testid='add-to-cart-{id}']",
+    "outOfStockTemplate": "[data-testid='out-of-stock-{id}']"
+  },
+  "BookDetailPage": {
+    "container": "[data-testid='book-detail-page']",
+    "title": "[data-testid='book-detail-title']",
+    "author": "[data-testid='book-detail-author']",
+    "genre": "[data-testid='book-detail-genre']",
+    "description": "[data-testid='book-detail-description']",
+    "price": "[data-testid='book-detail-price']",
+    "stock": "[data-testid='book-detail-stock']",
+    "addToCartButton": "[data-testid='add-to-cart-detail']",
+    "outOfStock": "[data-testid='out-of-stock']",
+    "loading": "[data-testid='loading']",
+    "notFound": "[data-testid='not-found']"
+  },
+  "LoginPage": {
+    "container": "[data-testid='login-page']",
+    "form": "[data-testid='login-form']",
+    "emailInput": "[data-testid='login-email']",
+    "passwordInput": "[data-testid='login-password']",
+    "submitButton": "[data-testid='login-submit']",
+    "error": "[data-testid='login-error']",
+    "signupLink": "[data-testid='signup-link']"
+  },
+  "SignupPage": {
+    "container": "[data-testid='signup-page']",
+    "form": "[data-testid='signup-form']",
+    "usernameInput": "[data-testid='signup-username']",
+    "emailInput": "[data-testid='signup-email']",
+    "passwordInput": "[data-testid='signup-password']",
+    "submitButton": "[data-testid='signup-submit']",
+    "error": "[data-testid='signup-error']",
+    "loginLink": "[data-testid='login-link']"
+  },
+  "CartPage": {
+    "container": "[data-testid='cart-page']",
+    "emptyMessage": "[data-testid='cart-empty']",
+    "total": "[data-testid='cart-total']",
+    "clearButton": "[data-testid='cart-clear']",
+    "checkoutButton": "[data-testid='checkout-btn']"
+  },
+  "CartItem": {
+    "rowTemplate": "[data-testid='cart-item-{id}']",
+    "titleTemplate": "[data-testid='cart-item-title-{id}']",
+    "priceTemplate": "[data-testid='cart-item-price-{id}']",
+    "qtyTemplate": "[data-testid='cart-qty-{id}']",
+    "qtyMinusTemplate": "[data-testid='cart-qty-minus-{id}']",
+    "qtyPlusTemplate": "[data-testid='cart-qty-plus-{id}']",
+    "removeTemplate": "[data-testid='cart-remove-{id}']"
+  },
+  "OrdersPage": {
+    "container": "[data-testid='orders-page']",
+    "noOrdersMessage": "[data-testid='no-orders']",
+    "loading": "[data-testid='loading']"
+  },
+  "OrderCard": {
+    "cardTemplate": "[data-testid='order-card-{id}']",
+    "statusTemplate": "[data-testid='order-status-{id}']"
+  },
+  "ProfilePage": {
+    "container": "[data-testid='profile-page']",
+    "username": "[data-testid='profile-username']",
+    "email": "[data-testid='profile-email']",
+    "balance": "[data-testid='profile-balance']",
+    "noListings": "[data-testid='no-listings']",
+    "myListingTemplate": "[data-testid='my-listing-{id}']",
+    "cancelListingTemplate": "[data-testid='cancel-listing-{id}']"
+  },
+  "MarketplacePage": {
+    "container": "[data-testid='marketplace-page']",
+    "noListings": "[data-testid='no-listings']",
+    "loading": "[data-testid='loading']"
+  },
+  "ListingCard": {
+    "cardTemplate": "[data-testid='listing-card-{id}']",
+    "titleTemplate": "[data-testid='listing-title-{id}']",
+    "priceTemplate": "[data-testid='listing-price-{id}']",
+    "conditionBadgeTemplate": "[data-testid='listing-condition-badge-{id}']",
+    "buyButtonTemplate": "[data-testid='listing-buy-{id}']"
+  },
+  "SellPage": {
+    "container": "[data-testid='create-listing-page']",
+    "bookSelect": "[data-testid='listing-book-select']",
+    "conditionSelect": "[data-testid='listing-condition']",
+    "priceInput": "[data-testid='listing-price']",
+    "createButton": "[data-testid='listing-create']",
+    "error": "[data-testid='listing-error']"
+  }
+}

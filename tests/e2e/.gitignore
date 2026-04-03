@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Test results
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Temporary files
+*.log
+
+# Environment files
+.env
+.env.local

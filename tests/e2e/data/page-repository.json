@@ -1,0 +1,155 @@
+{
+  "Navigation": {
+    "topbar": "[data-testid='topbar']",
+    "sidebar": "[data-testid='sidebar']",
+    "sidebarToggle": "[data-testid='sidebar-toggle']",
+    "logo": "[data-testid='logo']",
+    "allBooksLink": "[data-testid='nav-all-books']",
+    "loginLink": "[data-testid='nav-login']",
+    "signupLink": "[data-testid='nav-signup']",
+    "cartLink": "[data-testid='nav-cart']",
+    "ordersLink": "[data-testid='nav-orders']",
+    "sellLink": "[data-testid='nav-sell']",
+    "profileLink": "[data-testid='nav-profile']",
+    "logoutButton": "[data-testid='logout-btn']",
+    "cartBadge": "[data-testid='cart-badge']",
+    "cartBadgeMobile": "[data-testid='cart-badge-mobile']",
+    "marketplaceLink": "[data-testid='nav-marketplace']",
+    "themeToggle": "[data-testid='theme-toggle']",
+    "userBalance": "[data-testid='user-balance']",
+    "mobileSearchBtn": "[data-testid='mobile-search-btn']",
+    "mobileCartBtn": "[data-testid='mobile-cart-btn']"
+  },
+  "HomePage": {
+    "container": "[data-testid='home-page']",
+    "bookGrid": "[data-testid='book-grid']",
+    "searchInput": "[data-testid='search-input']",
+    "genreChips": "[data-testid='genre-chips']",
+    "pagination": "[data-testid='pagination']",
+    "nextPage": "[data-testid='next-page']",
+    "prevPage": "[data-testid='prev-page']",
+    "loadingBooks": "[data-testid='loading-books']",
+    "noBooks": "[data-testid='no-books']"
+  },
+  "BookCard": {
+    "cardById": "[data-testid='book-card-{id}']",
+    "genreById": "[data-testid='book-genre-{id}']",
+    "titleById": "[data-testid='book-title-{id}']",
+    "authorById": "[data-testid='book-author-{id}']",
+    "priceById": "[data-testid='book-price-{id}']",
+    "addToCartById": "[data-testid='add-to-cart-{id}']",
+    "outOfStockById": "[data-testid='out-of-stock-{id}']"
+  },
+  "BookDetail": {
+    "container": "[data-testid='book-detail-page']",
+    "title": "[data-testid='book-detail-title']",
+    "price": "[data-testid='book-detail-price']",
+    "addToCartButton": "[data-testid='add-to-cart-detail']",
+    "author": "[data-testid='book-detail-author']",
+    "description": "[data-testid='book-detail-description']",
+    "genre": "[data-testid='book-detail-genre']",
+    "stock": "[data-testid='book-detail-stock']",
+    "outOfStock": "[data-testid='out-of-stock']",
+    "loading": "[data-testid='loading']",
+    "notFound": "[data-testid='not-found']"
+  },
+  "LoginPage": {
+    "container": "[data-testid='login-page']",
+    "form": "[data-testid='login-form']",
+    "emailInput": "[data-testid='login-email']",
+    "passwordInput": "[data-testid='login-password']",
+    "submitButton": "[data-testid='login-submit']",
+    "errorMessage": "[data-testid='login-error']",
+    "signupLink": "[data-testid='signup-link']"
+  },
+  "SignupPage": {
+    "container": "[data-testid='signup-page']",
+    "form": "[data-testid='signup-form']",
+    "usernameInput": "[data-testid='signup-username']",
+    "emailInput": "[data-testid='signup-email']",
+    "passwordInput": "[data-testid='signup-password']",
+    "submitButton": "[data-testid='signup-submit']",
+    "errorMessage": "[data-testid='signup-error']",
+    "loginLink": "[data-testid='login-link']"
+  },
+  "CartPage": {
+    "container": "[data-testid='cart-page']",
+    "emptyMessage": "[data-testid='cart-empty']",
+    "total": "[data-testid='cart-total']",
+    "clearButton": "[data-testid='cart-clear']",
+    "checkoutButton": "[data-testid='checkout-btn']"
+  },
+  "CartItem": {
+    "rowById": "[data-testid='cart-item-{id}']",
+    "titleById": "[data-testid='cart-item-title-{id}']",
+    "priceById": "[data-testid='cart-item-price-{id}']",
+    "qtyMinusById": "[data-testid='cart-qty-minus-{id}']",
+    "qtyById": "[data-testid='cart-qty-{id}']",
+    "qtyPlusById": "[data-testid='cart-qty-plus-{id}']",
+    "removeById": "[data-testid='cart-remove-{id}']"
+  },
+  "OrdersPage": {
+    "container": "[data-testid='orders-page']",
+    "noOrders": "[data-testid='no-orders']",
+    "loading": "[data-testid='loading']"
+  },
+  "OrderCard": {
+    "cardById": "[data-testid='order-card-{id}']",
+    "statusById": "[data-testid='order-status-{id}']"
+  },
+  "OrderDetailPage": {
+    "container": "[data-testid='order-detail-page']",
+    "statusById": "[data-testid='order-status-{id}']",
+    "itemByIndex": "[data-testid='order-item-{idx}']",
+    "total": "[data-testid='order-total']",
+    "returnButtonById": "[data-testid='return-order-{id}']",
+    "loading": "[data-testid='loading']",
+    "notFound": "[data-testid='not-found']",
+    "returnCountdown": "[data-testid='return-countdown']",
+    "returnExpired": "[data-testid='return-expired']"
+  },
+  "MarketplacePage": {
+    "container": "[data-testid='marketplace-page']",
+    "noListings": "[data-testid='no-listings']",
+    "loading": "[data-testid='loading']"
+  },
+  "ListingCard": {
+    "cardById": "[data-testid='listing-card-{id}']",
+    "titleById": "[data-testid='listing-title-{id}']",
+    "conditionBadgeById": "[data-testid='listing-condition-badge-{id}']",
+    "priceById": "[data-testid='listing-price-{id}']",
+    "buyButtonById": "[data-testid='listing-buy-{id}']"
+  },
+  "CreateListingPage": {
+    "container": "[data-testid='create-listing-page']",
+    "bookSelect": "[data-testid='listing-book-select']",
+    "conditionSelect": "[data-testid='listing-condition']",
+    "priceInput": "[data-testid='listing-price']",
+    "createButton": "[data-testid='listing-create']",
+    "errorMessage": "[data-testid='listing-error']"
+  },
+  "ProfilePage": {
+    "container": "[data-testid='profile-page']",
+    "username": "[data-testid='profile-username']",
+    "email": "[data-testid='profile-email']",
+    "balance": "[data-testid='profile-balance']",
+    "noListings": "[data-testid='no-listings']",
+    "myListingById": "[data-testid='my-listing-{id}']",
+    "cancelListingById": "[data-testid='cancel-listing-{id}']"
+  },
+  "GenreFilter": {
+    "chips": "[data-testid='genre-chips']",
+    "fiction": "[data-testid='genre-chip-fiction']",
+    "sciFi": "[data-testid='genre-chip-sci-fi']",
+    "nonFiction": "[data-testid='genre-chip-non-fiction']",
+    "biography": "[data-testid='genre-chip-biography']",
+    "fantasy": "[data-testid='genre-chip-fantasy']",
+    "mystery": "[data-testid='genre-chip-mystery']",
+    "sidebarFiction": "[data-testid='genre-filter-fiction']",
+    "sidebarSciFi": "[data-testid='genre-filter-sci-fi']",
+    "sidebarNonFiction": "[data-testid='genre-filter-non-fiction']",
+    "sidebarBiography": "[data-testid='genre-filter-biography']",
+    "sidebarFantasy": "[data-testid='genre-filter-fantasy']",
+    "sidebarMystery": "[data-testid='genre-filter-mystery']"
+  }
+}

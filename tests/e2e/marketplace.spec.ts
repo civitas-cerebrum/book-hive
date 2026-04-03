@@ -45,7 +45,7 @@ test.describe('Marketplace', () => {
     await loginAsUser1();
     await steps.navigateTo('/marketplace/sell');
     await steps.selectDropdown('CreateListingPage', 'bookSelect', { type: DropdownSelectType.INDEX, index: 2 });
-    await steps.selectDropdown('CreateListingPage', 'conditionSelect', { type: DropdownSelectType.VALUE, value: 'EXCELLENT' });
+    await steps.selectDropdown('CreateListingPage', 'conditionSelect', { type: DropdownSelectType.VALUE, value: 'LIKE_NEW' });
     await steps.fill('CreateListingPage', 'priceInput', '15.99');
     await steps.click('CreateListingPage', 'createButton');
     await steps.verifyUrlContains('/marketplace');
@@ -73,7 +73,7 @@ test.describe('Marketplace', () => {
     await loginAsUser1();
     await steps.navigateTo('/marketplace/sell');
     await steps.selectDropdown('CreateListingPage', 'bookSelect', { type: DropdownSelectType.INDEX, index: 4 });
-    await steps.selectDropdown('CreateListingPage', 'conditionSelect', { type: DropdownSelectType.VALUE, value: 'EXCELLENT' });
+    await steps.selectDropdown('CreateListingPage', 'conditionSelect', { type: DropdownSelectType.VALUE, value: 'LIKE_NEW' });
     await steps.fill('CreateListingPage', 'priceInput', '12.99');
     await steps.click('CreateListingPage', 'createButton');
     await steps.verifyUrlContains('/marketplace');

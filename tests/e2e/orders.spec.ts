@@ -18,18 +18,24 @@ test.describe('Orders', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
+    // After checkout, app navigates directly to order detail page
+    await steps.verifyUrlContains('/orders/');
+    await steps.verifyPresence('OrderDetailPage', 'page');
+    // Verify order was created by navigating to orders list
+    await steps.navigateTo('/orders');
     await steps.verifyCount('OrdersPage', 'orderCard', { greaterThan: 0 });
   });
 
-  test('should navigate to order detail', async ({ steps, loginAsUser1 }) => {
+  test('should navigate to order detail from list', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
     await steps.navigateTo('/books/book-007');
     await steps.click('BookDetailPage', 'addToCartButton');
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
+    await steps.verifyUrlContains('/orders/');
+    // Navigate to orders list then click to detail
+    await steps.navigateTo('/orders');
     await steps.clickNth('OrdersPage', 'orderCard', 0);
     await steps.verifyPresence('OrderDetailPage', 'page');
   });
@@ -41,8 +47,8 @@ test.describe('Orders', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
-    await steps.clickNth('OrdersPage', 'orderCard', 0);
+    // After checkout, we're already on order detail page
+    await steps.verifyUrlContains('/orders/');
     await steps.verifyPresence('OrderDetailPage', 'returnButton');
     await steps.verifyPresence('OrderDetailPage', 'returnCountdown');
   });
@@ -54,8 +60,8 @@ test.describe('Orders', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
-    await steps.clickNth('OrdersPage', 'orderCard', 0);
+    // After checkout, we're already on order detail page
+    await steps.verifyUrlContains('/orders/');
     await steps.click('OrderDetailPage', 'returnButton');
     await steps.waitForNetworkIdle();
     await steps.verifyTextContains('OrderDetailPage', 'orderStatus', 'RETURNED');
@@ -68,8 +74,8 @@ test.describe('Orders', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
-    await steps.clickNth('OrdersPage', 'orderCard', 0);
+    // After checkout, we're already on order detail page
+    await steps.verifyUrlContains('/orders/');
     await steps.verifyPresence('OrderDetailPage', 'total');
     await steps.verifyText('OrderDetailPage', 'total', undefined, { notEmpty: true });
   });

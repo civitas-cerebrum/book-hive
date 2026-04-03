@@ -20,8 +20,9 @@ test.describe('Checkout', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
-    await steps.verifyCount('OrdersPage', 'orderCard', { greaterThan: 0 });
+    // After checkout, app navigates to order detail page, not orders list
+    await steps.verifyUrlContains('/orders/');
+    await steps.verifyPresence('OrderDetailPage', 'page');
   });
 
   test('should show order with COMPLETED status after checkout', async ({ steps, loginAsUser1 }) => {
@@ -31,8 +32,9 @@ test.describe('Checkout', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
-    await steps.verifyTextContains('OrdersPage', 'orderStatus', 'COMPLETED');
+    // Navigates directly to order detail showing COMPLETED
+    await steps.verifyUrlContains('/orders/');
+    await steps.verifyTextContains('OrderDetailPage', 'orderStatus', 'COMPLETED');
   });
 
   test('should empty cart after checkout', async ({ steps, loginAsUser1 }) => {
@@ -42,7 +44,7 @@ test.describe('Checkout', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
+    await steps.verifyUrlContains('/orders/');
     await steps.navigateTo('/cart');
     await steps.verifyPresence('CartPage', 'emptyCart');
   });
@@ -58,7 +60,7 @@ test.describe('Checkout', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
+    await steps.verifyUrlContains('/orders/');
 
     await steps.navigateTo('/profile');
     const newBalance = await steps.getText('ProfilePage', 'balance');
@@ -66,15 +68,15 @@ test.describe('Checkout', () => {
     expect(newNum).toBeLessThan(initialNum);
   });
 
-  test('should navigate to order detail after checkout', async ({ steps, loginAsUser1 }) => {
+  test('should display order items on detail page after checkout', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
     await steps.navigateTo('/books/book-005');
     await steps.click('BookDetailPage', 'addToCartButton');
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/cart');
     await steps.click('CartPage', 'checkoutButton');
-    await steps.verifyUrlContains('/orders');
-    await steps.clickNth('OrdersPage', 'orderCard', 0);
+    await steps.verifyUrlContains('/orders/');
     await steps.verifyPresence('OrderDetailPage', 'page');
+    await steps.verifyPresence('OrderDetailPage', 'total');
   });
 });

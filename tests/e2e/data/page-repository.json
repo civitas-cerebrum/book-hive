@@ -18,7 +18,13 @@
         { "elementName": "allBooksLink", "selector": { "css": "[data-testid='nav-all-books']" } },
         { "elementName": "marketplaceLink", "selector": { "css": "[data-testid='nav-marketplace']" } },
         { "elementName": "userBalance", "selector": { "css": "[data-testid='user-balance']" } },
-        { "elementName": "themeToggle", "selector": { "css": "[data-testid='theme-toggle']" } }
+        { "elementName": "themeToggle", "selector": { "css": "[data-testid='theme-toggle']" } },
+        { "elementName": "genreFiction", "selector": { "css": "[data-testid='genre-filter-fiction']" } },
+        { "elementName": "genreSciFi", "selector": { "css": "[data-testid='genre-filter-sci-fi']" } },
+        { "elementName": "genreNonFiction", "selector": { "css": "[data-testid='genre-filter-non-fiction']" } },
+        { "elementName": "genreBiography", "selector": { "css": "[data-testid='genre-filter-biography']" } },
+        { "elementName": "genreFantasy", "selector": { "css": "[data-testid='genre-filter-fantasy']" } },
+        { "elementName": "genreMystery", "selector": { "css": "[data-testid='genre-filter-mystery']" } }
       ]
     },
     {
@@ -87,7 +93,7 @@
         { "elementName": "clearCartButton", "selector": { "css": "[data-testid='cart-clear']" } },
         { "elementName": "checkoutButton", "selector": { "css": "[data-testid='checkout-btn']" } },
         { "elementName": "cartItem", "selector": { "css": "[data-testid^='cart-item-']" } },
-        { "elementName": "cartQuantity", "selector": { "css": "[data-testid^='cart-qty-']" } },
+        { "elementName": "cartQuantity", "selector": { "css": "[data-testid^='cart-qty-']:not([data-testid*='plus']):not([data-testid*='minus'])" } },
         { "elementName": "quantityPlus", "selector": { "css": "[data-testid^='cart-qty-plus-']" } },
         { "elementName": "quantityMinus", "selector": { "css": "[data-testid^='cart-qty-minus-']" } },
         { "elementName": "removeButton", "selector": { "css": "[data-testid^='cart-remove-']" } },
@@ -113,8 +119,8 @@
         { "elementName": "total", "selector": { "css": "[data-testid='order-total']" } },
         { "elementName": "returnCountdown", "selector": { "css": "[data-testid='return-countdown']" } },
         { "elementName": "returnButton", "selector": { "css": "[data-testid^='return-order-']" } },
-        { "elementName": "orderStatus", "selector": { "css": "[data-testid='order-status']" } },
-        { "elementName": "orderItems", "selector": { "css": "[data-testid='order-items']" } }
+        { "elementName": "orderStatus", "selector": { "css": "[data-testid^='order-status-']" } },
+        { "elementName": "orderItems", "selector": { "css": "[data-testid^='order-item-']" } }
       ]
     },
     {
@@ -134,7 +140,7 @@
       "elements": [
         { "elementName": "page", "selector": { "css": "[data-testid='marketplace-page']" } },
         { "elementName": "noListings", "selector": { "css": "[data-testid='no-listings']" } },
-        { "elementName": "listing", "selector": { "css": "[data-testid^='listing-']" } },
+        { "elementName": "listing", "selector": { "css": "[data-testid^='listing-card-']" } },
         { "elementName": "listingBuyButton", "selector": { "css": "[data-testid^='listing-buy-']" } },
         { "elementName": "listingConditionBadge", "selector": { "css": "[data-testid^='listing-condition-badge-']" } }
       ]
@@ -149,18 +155,6 @@
         { "elementName": "createButton", "selector": { "css": "[data-testid='listing-create']" } },
         { "elementName": "errorMessage", "selector": { "css": "[data-testid='listing-error']" } },
         { "elementName": "successMessage", "selector": { "css": "[data-testid='listing-success']" } }
-      ]
-    },
-    {
-      "name": "GenreFilter",
-      "elements": [
-        { "elementName": "fiction", "selector": { "css": "[data-testid='genre-chip-fiction']" } },
-        { "elementName": "sciFi", "selector": { "css": "[data-testid='genre-chip-sci-fi']" } },
-        { "elementName": "nonFiction", "selector": { "css": "[data-testid='genre-chip-non-fiction']" } },
-        { "elementName": "biography", "selector": { "css": "[data-testid='genre-chip-biography']" } },
-        { "elementName": "fantasy", "selector": { "css": "[data-testid='genre-chip-fantasy']" } },
-        { "elementName": "mystery", "selector": { "css": "[data-testid='genre-chip-mystery']" } },
-        { "elementName": "activeGenre", "selector": { "css": "[data-testid^='genre-chip-'].active" } }
       ]
     }
   ]

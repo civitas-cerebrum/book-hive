@@ -46,24 +46,28 @@ test.describe('Homepage', () => {
     }
   });
 
-  test('should filter by Fiction genre', async ({ steps }) => {
+  // Genre filter tests - use sidebar links (desktop) as genre chips are mobile-only
+  test('should filter by Fiction genre via sidebar', async ({ steps }) => {
     await steps.navigateTo('/');
-    await steps.click('GenreFilter', 'fiction');
+    await steps.click('Navigation', 'genreFiction');
     await steps.waitForNetworkIdle();
+    await steps.verifyUrlContains('genre=Fiction');
     await steps.verifyCount('HomePage', 'bookCard', { greaterThan: 0 });
   });
 
-  test('should filter by Sci-Fi genre', async ({ steps }) => {
+  test('should filter by Sci-Fi genre via sidebar', async ({ steps }) => {
     await steps.navigateTo('/');
-    await steps.click('GenreFilter', 'sciFi');
+    await steps.click('Navigation', 'genreSciFi');
     await steps.waitForNetworkIdle();
+    await steps.verifyUrlContains('genre=Sci-Fi');
     await steps.verifyCount('HomePage', 'bookCard', { greaterThan: 0 });
   });
 
-  test('should filter by Mystery genre', async ({ steps }) => {
+  test('should filter by Mystery genre via sidebar', async ({ steps }) => {
     await steps.navigateTo('/');
-    await steps.click('GenreFilter', 'mystery');
+    await steps.click('Navigation', 'genreMystery');
     await steps.waitForNetworkIdle();
+    await steps.verifyUrlContains('genre=Mystery');
     await steps.verifyCount('HomePage', 'bookCard', { greaterThan: 0 });
   });
 

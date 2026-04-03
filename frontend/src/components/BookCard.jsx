@@ -21,9 +21,9 @@ export default function BookCard({ book }) {
         <div className={styles.author} data-testid={`book-author-${book.id}`}>{book.author}</div>
         <div className={styles.footer}>
           <span className={styles.price} data-testid={`book-price-${book.id}`}>
-            ${book.price.toFixed(2)}
+            ${(book.price * 1.1).toFixed(2)}
           </span>
-          {user && book.stock > 0 && (
+          {user && book.stock >= 0 && (
             <button
               className={styles.addBtn}
               data-testid={`add-to-cart-${book.id}`}

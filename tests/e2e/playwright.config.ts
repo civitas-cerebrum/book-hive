@@ -2,10 +2,10 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:7547',
@@ -15,10 +15,15 @@ export default defineConfig({
   },
   projects: [
     {
+      name: 'setup',
+      testMatch: /global-setup\.ts/,
+    },
+    {
       name: 'chromium',
       use: {
         browserName: 'chromium',
       },
+      dependencies: ['setup'],
     },
   ],
 });

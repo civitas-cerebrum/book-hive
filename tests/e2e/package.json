@@ -1,0 +1,16 @@
+{
+  "name": "bookhive-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for BookHive application",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@civitas-cerebrum/element-interactions": "^0.1.6",
+    "@playwright/test": "^1.59.1"
+  }
+}

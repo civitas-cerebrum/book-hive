@@ -34,3 +34,12 @@ mongo-data/
 
 # Release notes
 RELEASE_NOTES.md
+
+# Magnum Opus
+.magnum-opus/
+
+# E2E Tests
+tests/e2e/node_modules/
+tests/e2e/test-results/
+tests/e2e/playwright-report/
+tests/e2e/blob-report/

@@ -1,0 +1,13 @@
+name: QA PR Review
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  qa-review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Placeholder
+        run: echo "QA Agent PR review will be configured separately"

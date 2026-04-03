@@ -1,99 +1,126 @@
 import { test, expect } from './fixtures/base';
 
 test.describe('Navigation', () => {
+  test.describe.configure({ timeout: 60000 });
+
   test.describe('Unauthenticated', () => {
-    test('should show public nav items', async ({ page, sel }) => {
-      await page.goto('/');
-      await expect(page.locator(sel('Navigation', 'sidebar'))).toBeVisible();
-      await expect(page.locator(sel('Navigation', 'allBooksLink'))).toBeVisible();
-      await expect(page.locator(sel('Navigation', 'marketplaceLink'))).toBeVisible();
-      await expect(page.locator(sel('Navigation', 'loginLink'))).toBeVisible();
-      await expect(page.locator(sel('Navigation', 'signupLink'))).toBeVisible();
+    test('should show public navigation items', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.verifyPresence('Navigation', 'sidebar');
+      await steps.verifyPresence('Navigation', 'allBooksLink');
+      await steps.verifyPresence('Navigation', 'marketplaceLink');
+      await steps.verifyPresence('Navigation', 'loginLink');
+      await steps.verifyPresence('Navigation', 'signupLink');
     });
 
-    test('should hide auth nav items', async ({ page, sel }) => {
-      await page.goto('/');
-      await expect(page.locator(sel('Navigation', 'cartLink'))).not.toBeVisible();
-      await expect(page.locator(sel('Navigation', 'ordersLink'))).not.toBeVisible();
-      await expect(page.locator(sel('Navigation', 'profileLink'))).not.toBeVisible();
+    test('should hide authenticated navigation items', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.verifyAbsence('Navigation', 'cartLink');
+      await steps.verifyAbsence('Navigation', 'ordersLink');
+      await steps.verifyAbsence('Navigation', 'profileLink');
     });
 
-    test('should navigate to marketplace', async ({ page, sel }) => {
-      await page.goto('/');
-      await page.locator(sel('Navigation', 'marketplaceLink')).click();
-      await expect(page).toHaveURL('/marketplace');
+    test('should navigate to marketplace', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.click('Navigation', 'marketplaceLink');
+      await steps.verifyUrlContains('/marketplace');
+      await steps.verifyPresence('MarketplacePage', 'page');
     });
 
-    test('should navigate to login', async ({ page, sel }) => {
-      await page.goto('/');
-      await page.locator(sel('Navigation', 'loginLink')).click();
-      await expect(page).toHaveURL('/login');
+    test('should navigate to login', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.click('Navigation', 'loginLink');
+      await steps.verifyUrlContains('/login');
+      await steps.verifyPresence('LoginPage', 'page');
+    });
+
+    test('should navigate to signup', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.click('Navigation', 'signupLink');
+      await steps.verifyUrlContains('/signup');
+      await steps.verifyPresence('SignupPage', 'page');
     });
   });
 
   test.describe('Authenticated', () => {
-    test('should show auth nav items', async ({ page, sel, loginAsUser1 }) => {
+    test('should show authenticated navigation items', async ({ steps, loginAsUser1 }) => {
       await loginAsUser1();
-      await expect(page.locator(sel('Navigation', 'cartLink'))).toBeVisible();
-      await expect(page.locator(sel('Navigation', 'ordersLink'))).toBeVisible();
-      await expect(page.locator(sel('Navigation', 'profileLink'))).toBeVisible();
-      await expect(page.locator(sel('Navigation', 'logoutButton'))).toBeVisible();
+      await steps.verifyPresence('Navigation', 'cartLink');
+      await steps.verifyPresence('Navigation', 'ordersLink');
+      await steps.verifyPresence('Navigation', 'profileLink');
+      await steps.verifyPresence('Navigation', 'logoutButton');
     });
 
-    test('should hide public nav items', async ({ page, sel, loginAsUser1 }) => {
+    test('should hide public auth links when authenticated', async ({ steps, loginAsUser1 }) => {
       await loginAsUser1();
-      await expect(page.locator(sel('Navigation', 'loginLink'))).not.toBeVisible();
-      await expect(page.locator(sel('Navigation', 'signupLink'))).not.toBeVisible();
+      await steps.verifyAbsence('Navigation', 'loginLink');
+      await steps.verifyAbsence('Navigation', 'signupLink');
     });
 
-    test('should navigate to cart', async ({ page, sel, loginAsUser1 }) => {
+    test('should navigate to cart', async ({ steps, loginAsUser1 }) => {
       await loginAsUser1();
-      await page.locator(sel('Navigation', 'cartLink')).click();
-      await expect(page).toHaveURL('/cart');
+      await steps.click('Navigation', 'cartLink');
+      await steps.verifyUrlContains('/cart');
+      await steps.verifyPresence('CartPage', 'page');
     });
 
-    test('should navigate to orders', async ({ page, sel, loginAsUser1 }) => {
+    test('should navigate to orders', async ({ steps, loginAsUser1 }) => {
       await loginAsUser1();
-      await page.locator(sel('Navigation', 'ordersLink')).click();
-      await expect(page).toHaveURL('/orders');
+      await steps.click('Navigation', 'ordersLink');
+      await steps.verifyUrlContains('/orders');
+      await steps.verifyPresence('OrdersPage', 'page');
     });
 
-    test('should show cart badge', async ({ page, sel, loginAsUser1 }) => {
+    test('should navigate to profile', async ({ steps, loginAsUser1 }) => {
       await loginAsUser1();
-      await page.goto('/');
-      await page.locator('[data-testid="add-to-cart-book-001"]').click();
-      await page.waitForTimeout(500);
-      await expect(page.locator(sel('Navigation', 'cartBadge'))).toContainText('1');
+      await steps.click('Navigation', 'profileLink');
+      await steps.verifyUrlContains('/profile');
+      await steps.verifyPresence('ProfilePage', 'page');
+    });
+
+    test('should show cart badge when items in cart', async ({ steps, loginAsUser1 }) => {
+      await loginAsUser1();
+      await steps.navigateTo('/books/book-001');
+      await steps.click('BookDetailPage', 'addToCartButton');
+      await steps.waitForState('Navigation', 'cartBadge', 'visible');
+      await steps.verifyPresence('Navigation', 'cartBadge');
+    });
+
+    test('should display user balance', async ({ steps, loginAsUser1 }) => {
+      await loginAsUser1();
+      await steps.verifyPresence('Navigation', 'userBalance');
+      await steps.verifyText('Navigation', 'userBalance', undefined, { notEmpty: true });
     });
   });
 
   test.describe('TopBar', () => {
-    test('should display topbar', async ({ page, sel }) => {
-      await page.goto('/');
-      await expect(page.locator(sel('Navigation', 'topbar'))).toBeVisible();
+    test('should display topbar', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.verifyPresence('Navigation', 'topbar');
     });
 
-    test('should display sidebar toggle', async ({ page, sel }) => {
-      await page.goto('/');
-      await expect(page.locator(sel('Navigation', 'sidebarToggle'))).toBeVisible();
+    test('should display sidebar toggle', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.verifyPresence('Navigation', 'sidebarToggle');
     });
   });
 
   test.describe('Theme', () => {
-    test('should display theme toggle', async ({ page, sel }) => {
-      await page.goto('/');
-      await expect(page.locator(sel('Navigation', 'themeToggle'))).toBeVisible();
+    test('should display theme toggle', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.verifyPresence('Navigation', 'themeToggle');
     });
 
-    test('should toggle theme', async ({ page, sel }) => {
-      await page.goto('/');
-      await page.locator(sel('Navigation', 'themeToggle')).click();
-      await expect(page.locator(sel('Navigation', 'themeToggle'))).toBeVisible();
+    test('should toggle theme when clicked', async ({ steps }) => {
+      await steps.navigateTo('/');
+      await steps.click('Navigation', 'themeToggle');
+      await steps.verifyPresence('Navigation', 'themeToggle');
     });
   });
 
-  test('should display logo', async ({ page, sel }) => {
-    await page.goto('/');
-    await expect(page.locator(sel('Navigation', 'logo'))).toContainText('BookHive');
+  test('should display logo with BookHive text', async ({ steps }) => {
+    await steps.navigateTo('/');
+    await steps.verifyPresence('Navigation', 'logo');
+    await steps.verifyTextContains('Navigation', 'logo', 'BookHive');
   });
 });

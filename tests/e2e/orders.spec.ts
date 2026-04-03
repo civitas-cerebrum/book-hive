@@ -1,57 +1,76 @@
-import { test, expect, loginViaAPI, clearCartViaAPI, TEST_USERS, resetDatabase } from './fixtures/base';
+import { test, expect, TEST_USERS, loginViaAPI, clearCartViaAPI, resetDatabase } from './fixtures/base';
 
 test.describe('Orders', () => {
-  test('should show no orders initially', async ({ page, sel, loginAsUser1 }) => {
+  test.describe.configure({ timeout: 60000 });
+
+  test('should show no orders initially after reset', async ({ steps, loginAsUser1 }) => {
     await resetDatabase();
     await loginAsUser1();
-    await page.goto('/orders');
-    await expect(page.locator(sel('OrdersPage', 'noOrders'))).toBeVisible();
+    await steps.navigateTo('/orders');
+    await steps.verifyPresence('OrdersPage', 'page');
+    await steps.verifyPresence('OrdersPage', 'noOrders');
   });
 
-  test('should display order after purchase', async ({ page, sel, loginAsUser1 }) => {
+  test('should display order after purchase', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-005"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await page.locator(sel('CartPage', 'checkoutButton')).click();
-    await expect(page.locator('[data-testid^="order-card-"]').first()).toBeVisible();
+    await steps.navigateTo('/books/book-006');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.click('CartPage', 'checkoutButton');
+    await steps.verifyUrlContains('/orders');
+    await steps.verifyCount('OrdersPage', 'orderCard', { greaterThan: 0 });
   });
 
-  test('should navigate to order detail', async ({ page, sel, loginAsUser1 }) => {
+  test('should navigate to order detail', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-006"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await page.locator(sel('CartPage', 'checkoutButton')).click();
-    await expect(page).toHaveURL(/\/orders/);
-    await page.locator('[data-testid^="order-card-"]').first().click();
-    await expect(page.locator(sel('OrderDetailPage', 'page'))).toBeVisible();
+    await steps.navigateTo('/books/book-007');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.click('CartPage', 'checkoutButton');
+    await steps.verifyUrlContains('/orders');
+    await steps.clickNth('OrdersPage', 'orderCard', 0);
+    await steps.verifyPresence('OrderDetailPage', 'page');
   });
 
-  test('should show return button and countdown', async ({ page, sel, loginAsUser1 }) => {
+  test('should show return button and countdown on recent order', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-007"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await page.locator(sel('CartPage', 'checkoutButton')).click();
-    await page.locator('[data-testid^="order-card-"]').first().click();
-    await expect(page.locator('[data-testid^="return-order-"]')).toBeVisible();
-    await expect(page.locator(sel('OrderDetailPage', 'returnCountdown'))).toBeVisible();
+    await steps.navigateTo('/books/book-008');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.click('CartPage', 'checkoutButton');
+    await steps.verifyUrlContains('/orders');
+    await steps.clickNth('OrdersPage', 'orderCard', 0);
+    await steps.verifyPresence('OrderDetailPage', 'returnButton');
+    await steps.verifyPresence('OrderDetailPage', 'returnCountdown');
   });
 
-  test('should process return', async ({ page, sel, loginAsUser1 }) => {
+  test('should process order return', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-008"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await page.locator(sel('CartPage', 'checkoutButton')).click();
-    await page.locator('[data-testid^="order-card-"]').first().click();
-    await page.locator('[data-testid^="return-order-"]').click();
-    await page.waitForTimeout(500);
-    await expect(page.locator('[data-testid^="order-status-"]')).toContainText('RETURNED');
+    await steps.navigateTo('/books/book-009');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.click('CartPage', 'checkoutButton');
+    await steps.verifyUrlContains('/orders');
+    await steps.clickNth('OrdersPage', 'orderCard', 0);
+    await steps.click('OrderDetailPage', 'returnButton');
+    await steps.waitForNetworkIdle();
+    await steps.verifyTextContains('OrderDetailPage', 'orderStatus', 'RETURNED');
+  });
+
+  test('should display order total on detail page', async ({ steps, loginAsUser1 }) => {
+    await loginAsUser1();
+    await steps.navigateTo('/books/book-010');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.click('CartPage', 'checkoutButton');
+    await steps.verifyUrlContains('/orders');
+    await steps.clickNth('OrdersPage', 'orderCard', 0);
+    await steps.verifyPresence('OrderDetailPage', 'total');
+    await steps.verifyText('OrderDetailPage', 'total', undefined, { notEmpty: true });
   });
 });

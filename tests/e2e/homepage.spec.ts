@@ -36,11 +36,11 @@ test.describe('Homepage', () => {
     await steps.verifyPresence('HomePage', 'pagination');
   });
 
-  test('should paginate to next page', async ({ steps, page }) => {
+  test('should paginate to next page', async ({ steps }) => {
     await steps.navigateTo('/');
-    const nextBtn = page.locator('[data-testid="next-page"]');
-    if (await nextBtn.isEnabled()) {
-      await steps.click('HomePage', 'nextPage');
+    // Click next page - will work if there are more pages
+    const clicked = await steps.clickIfPresent('HomePage', 'nextPage');
+    if (clicked) {
       await steps.waitForNetworkIdle();
       await steps.verifyCount('HomePage', 'bookCard', { greaterThan: 0 });
     }

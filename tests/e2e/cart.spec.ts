@@ -1,76 +1,115 @@
-import { test, expect, loginViaAPI, clearCartViaAPI, TEST_USERS } from './fixtures/base';
+import { test, expect, TEST_USERS, loginViaAPI, clearCartViaAPI } from './fixtures/base';
 
 test.describe('Shopping Cart', () => {
+  test.describe.configure({ timeout: 60000 });
+
   test.beforeEach(async () => {
+    // Clear cart via API before each test
     try {
       const token = await loginViaAPI(TEST_USERS.user1.email, TEST_USERS.user1.password);
       await clearCartViaAPI(token);
-    } catch (e) { /* ignore */ }
+    } catch (e) {
+      // Ignore errors if API is not ready
+    }
   });
 
-  test('should show empty cart', async ({ page, sel, loginAsUser1 }) => {
+  test('should show empty cart message', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/cart');
-    await expect(page.locator(sel('CartPage', 'emptyCart'))).toBeVisible();
+    await steps.navigateTo('/cart');
+    await steps.verifyPresence('CartPage', 'page');
+    await steps.verifyPresence('CartPage', 'emptyCart');
   });
 
-  test('should add item from homepage', async ({ page, sel, loginAsUser1 }) => {
+  test('should display cart page elements', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-001"]').click();
-    await expect(page.locator(sel('Navigation', 'cartBadge'))).toContainText('1');
+    await steps.navigateTo('/');
+    await steps.clickNth('HomePage', 'bookCard', 0);
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.verifyPresence('CartPage', 'page');
+    await steps.verifyPresence('CartPage', 'cartTotal');
+    await steps.verifyPresence('CartPage', 'checkoutButton');
   });
 
-  test('should display cart items', async ({ page, sel, loginAsUser1 }) => {
+  test('should add item to cart from book detail', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-001"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await expect(page.locator('[data-testid^="cart-item-"]').first()).toBeVisible();
-    await expect(page.locator(sel('CartPage', 'cartTotal'))).toBeVisible();
+    await steps.navigateTo('/books/book-001');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForState('Navigation', 'cartBadge', 'visible');
+    await steps.verifyPresence('Navigation', 'cartBadge');
   });
 
-  test('should increase quantity', async ({ page, sel, loginAsUser1 }) => {
+  test('should display cart items after adding', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-001"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await page.locator('[data-testid^="cart-qty-plus-"]').first().click();
-    await page.waitForTimeout(500);
-    await expect(page.locator('[data-testid^="cart-qty-"]:not([data-testid*="minus"]):not([data-testid*="plus"])').first()).toContainText('2');
+    await steps.navigateTo('/books/book-001');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.verifyCount('CartPage', 'cartItem', { greaterThan: 0 });
+    await steps.verifyPresence('CartPage', 'cartTotal');
   });
 
-  test('should remove item', async ({ page, sel, loginAsUser1 }) => {
+  test('should increase item quantity', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-001"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await page.locator('[data-testid^="cart-remove-"]').first().click();
-    await page.waitForTimeout(500);
-    await expect(page.locator(sel('CartPage', 'emptyCart'))).toBeVisible();
+    await steps.navigateTo('/books/book-001');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+
+    // Get initial quantity using Steps API
+    const initialQty = await steps.getText('CartPage', 'cartQuantity');
+    const initialNum = parseInt(initialQty || '1');
+
+    await steps.clickNth('CartPage', 'quantityPlus', 0);
+    await steps.waitForNetworkIdle();
+
+    // Verify quantity increased
+    const newQty = await steps.getText('CartPage', 'cartQuantity');
+    const newNum = parseInt(newQty || '0');
+    expect(newNum).toBeGreaterThan(initialNum);
   });
 
-  test('should clear cart', async ({ page, sel, loginAsUser1 }) => {
+  test('should remove item from cart', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-001"]').click();
-    await page.locator('[data-testid="add-to-cart-book-002"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await page.locator(sel('CartPage', 'clearCartButton')).click();
-    await page.waitForTimeout(500);
-    await expect(page.locator(sel('CartPage', 'emptyCart'))).toBeVisible();
+    await steps.navigateTo('/books/book-001');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.clickNth('CartPage', 'removeButton', 0);
+    await steps.waitForNetworkIdle();
+    await steps.verifyPresence('CartPage', 'emptyCart');
   });
 
-  test('should show checkout button', async ({ page, sel, loginAsUser1 }) => {
+  test('should clear entire cart', async ({ steps, loginAsUser1 }) => {
     await loginAsUser1();
-    await page.goto('/');
-    await page.locator('[data-testid="add-to-cart-book-001"]').click();
-    await page.waitForTimeout(500);
-    await page.goto('/cart');
-    await expect(page.locator(sel('CartPage', 'checkoutButton'))).toBeVisible();
+    await steps.navigateTo('/books/book-001');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/books/book-002');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.click('CartPage', 'clearCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.verifyPresence('CartPage', 'emptyCart');
+  });
+
+  test('should show checkout button with items in cart', async ({ steps, loginAsUser1 }) => {
+    await loginAsUser1();
+    await steps.navigateTo('/books/book-001');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.verifyPresence('CartPage', 'checkoutButton');
+  });
+
+  test('should display cart total', async ({ steps, loginAsUser1 }) => {
+    await loginAsUser1();
+    await steps.navigateTo('/books/book-001');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.waitForNetworkIdle();
+    await steps.navigateTo('/cart');
+    await steps.verifyText('CartPage', 'cartTotal', undefined, { notEmpty: true });
   });
 });

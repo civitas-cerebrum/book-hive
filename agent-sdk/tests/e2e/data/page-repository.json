@@ -1,0 +1,76 @@
+{
+  "Common": {
+    "navigation": "nav",
+    "logo": "[data-testid='nav-logo']",
+    "allBooksLink": "[data-testid='nav-all-books']",
+    "marketplaceLink": "[data-testid='nav-marketplace']",
+    "loginLink": "[data-testid='nav-login']",
+    "signupLink": "[data-testid='nav-signup']",
+    "cartLink": "[data-testid='nav-cart']",
+    "ordersLink": "[data-testid='nav-orders']",
+    "sellBookLink": "[data-testid='nav-sell-book']",
+    "profileLink": "[data-testid='nav-profile']",
+    "logoutButton": "[data-testid='nav-logout']",
+    "themeToggle": "[data-testid='theme-toggle']",
+    "balanceDisplay": "[data-testid='nav-balance']"
+  },
+  "HomePage": {
+    "searchInput": "[data-testid='search-input']",
+    "bookGrid": "[data-testid='book-grid']",
+    "bookCard": "[data-testid='book-card']",
+    "addToCartButton": "[data-testid='add-to-cart']",
+    "previousButton": "[data-testid='prev-page']",
+    "nextButton": "[data-testid='next-page']",
+    "pageIndicator": "[data-testid='page-indicator']"
+  },
+  "BookDetailPage": {
+    "bookTitle": "[data-testid='book-detail-title']",
+    "bookAuthor": "[data-testid='book-detail-author']",
+    "bookGenre": "[data-testid='book-detail-genre']",
+    "bookDescription": "[data-testid='book-detail-description']",
+    "bookPrice": "[data-testid='book-detail-price']",
+    "stockInfo": "[data-testid='book-detail-stock']",
+    "addToCartButton": "[data-testid='book-detail-add-to-cart']"
+  },
+  "CartPage": {
+    "cartTitle": "[data-testid='cart-title']",
+    "clearCartButton": "[data-testid='clear-cart']",
+    "cartItem": "[data-testid='cart-item']",
+    "decrementButton": "[data-testid='decrement-qty']",
+    "incrementButton": "[data-testid='increment-qty']",
+    "removeButton": "[data-testid='remove-item']",
+    "totalAmount": "[data-testid='cart-total']",
+    "checkoutButton": "[data-testid='checkout-button']",
+    "emptyCartMessage": "[data-testid='empty-cart']"
+  },
+  "LoginPage": {
+    "pageTitle": "[data-testid='login-title']",
+    "emailInput": "[data-testid='login-email']",
+    "passwordInput": "[data-testid='login-password']",
+    "submitButton": "[data-testid='login-submit']",
+    "signupLink": "[data-testid='signup-link']",
+    "errorMessage": "[data-testid='login-error']"
+  },
+  "SignupPage": {
+    "pageTitle": "[data-testid='signup-title']",
+    "usernameInput": "[data-testid='signup-username']",
+    "emailInput": "[data-testid='signup-email']",
+    "passwordInput": "[data-testid='signup-password']",
+    "submitButton": "[data-testid='signup-submit']",
+    "loginLink": "[data-testid='login-link']",
+    "errorMessage": "[data-testid='signup-error']"
+  },
+  "MarketplacePage": {
+    "pageTitle": "[data-testid='marketplace-title']",
+    "listingGrid": "[data-testid='listing-grid']",
+    "listingCard": "[data-testid='listing-card']"
+  },
+  "ProfilePage": {
+    "pageTitle": "[data-testid='profile-title']",
+    "userInfo": "[data-testid='user-info']"
+  },
+  "OrdersPage": {
+    "pageTitle": "[data-testid='orders-title']",
+    "ordersList": "[data-testid='orders-list']"
+  }
+}

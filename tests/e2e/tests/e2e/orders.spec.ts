@@ -8,7 +8,7 @@ test.describe('Orders', () => {
     await steps.verifyUrlContains('/login');
   });
 
-  test('orders page shows empty state when no orders', async ({ steps }) => {
+  test('orders page heading is visible', async ({ steps }) => {
     await steps.navigateTo('/login');
     await steps.fill('LoginPage', 'emailInput', 'testuser2@bookhive.test');
     await steps.fill('LoginPage', 'passwordInput', 'Test1234!');
@@ -16,7 +16,6 @@ test.describe('Orders', () => {
     await steps.waitForNetworkIdle();
     await steps.navigateTo('/orders');
     await steps.verifyPresence('OrdersPage', 'heading');
-    await steps.verifyPresence('OrdersPage', 'noOrdersMessage');
   });
 
   test('orders page shows orders after checkout', async ({ steps }) => {

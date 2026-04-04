@@ -16,7 +16,7 @@
         { "elementName": "balanceDisplay", "selector": { "css": ".balance" } },
         { "elementName": "allBooksLink", "selector": { "text": "All Books" } },
         { "elementName": "marketplaceLink", "selector": { "text": "Marketplace" } },
-        { "elementName": "themeToggle", "selector": { "css": ".theme-toggle" } }
+        { "elementName": "themeToggle", "selector": { "css": "[data-testid='theme-toggle']" } }
       ]
     },
     {
@@ -76,7 +76,7 @@
         { "elementName": "cartTotal", "selector": { "css": "[data-testid='cart-total']" } },
         { "elementName": "cartClear", "selector": { "css": "[data-testid='cart-clear']" } },
         { "elementName": "checkoutButton", "selector": { "css": "[data-testid='checkout-btn']" } },
-        { "elementName": "cartItem", "selector": { "css": "[data-testid^='cart-item-']" } },
+        { "elementName": "cartItem", "selector": { "css": "[data-testid^='cart-item-']:not([data-testid*='-title']):not([data-testid*='-price'])" } },
         { "elementName": "heading", "selector": { "text": "Shopping Cart" } },
         { "elementName": "emptyMessage", "selector": { "text": "Your cart is empty" } }
       ]

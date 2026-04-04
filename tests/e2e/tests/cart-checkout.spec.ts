@@ -1,0 +1,39 @@
+import { test, expect } from '../fixtures/base';
+
+test.describe('Cart & Checkout Flow', () => {
+  test.describe.configure({ timeout: 60_000 });
+
+  test.beforeEach(async ({ steps }) => {
+    // Login first
+    await steps.navigateTo('/login');
+    await steps.fill('LoginPage', 'emailInput', 'testuser1@bookhive.test');
+    await steps.fill('LoginPage', 'passwordInput', 'Test1234!');
+    await steps.click('LoginPage', 'signInButton');
+    await steps.verifyPresence('NavBar', 'cartLink');
+  });
+
+  test('shows empty cart initially', async ({ steps }) => {
+    await steps.navigateTo('/cart');
+    await steps.verifyPresence('CartPage', 'emptyCart');
+  });
+
+  test('adds book to cart from detail page and sees it in cart', async ({ steps }) => {
+    await steps.navigateTo('/books/book-001');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.navigateTo('/cart');
+    await steps.verifyCount('CartPage', 'cartItem', { greaterThan: 0 });
+    await steps.verifyPresence('CartPage', 'cartTotal');
+  });
+
+  test('completes checkout flow', async ({ steps }) => {
+    // Add an item to cart
+    await steps.navigateTo('/books/book-002');
+    await steps.click('BookDetailPage', 'addToCartButton');
+    await steps.navigateTo('/cart');
+    await steps.verifyCount('CartPage', 'cartItem', { greaterThan: 0 });
+
+    // Checkout
+    await steps.click('CartPage', 'checkoutButton');
+    await steps.verifyUrlContains('/orders');
+  });
+});

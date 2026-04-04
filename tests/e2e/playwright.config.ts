@@ -1,22 +1,32 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: '.',
+  testDir: './',
   testMatch: '**/*.spec.ts',
-  timeout: 60000,
-  retries: 2,
-  reporter: 'html',
+  fullyParallel: false,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: 1,
+  reporter: [
+    ['html', { outputFolder: 'playwright-report' }],
+    ['list']
+  ],
+  globalSetup: require.resolve('./global-setup'),
   use: {
     baseURL: 'http://localhost:7547',
-    headless: true,
+    trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    trace: 'retain-on-failure',
+  },
+  timeout: 60000,
+  expect: {
+    timeout: 10000,
   },
   projects: [
     {
       name: 'chromium',
-      use: { browserName: 'chromium' },
+      use: { ...devices['Desktop Chrome'] },
     },
   ],
+  outputDir: 'test-results/',
 });

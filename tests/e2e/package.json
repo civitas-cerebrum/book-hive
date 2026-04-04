@@ -1,22 +1,18 @@
 {
-  "name": "book-hive-e2e",
+  "name": "bookhive-e2e-tests",
   "version": "1.0.0",
-  "description": "E2E test suite for BookHive application",
-  "type": "commonjs",
+  "description": "End-to-end tests for BookHive application",
   "scripts": {
-    "test": "npx playwright test",
-    "test:headed": "npx playwright test --headed",
-    "test:debug": "npx playwright test --debug",
-    "report": "npx playwright show-report"
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.43.0"
   },
   "dependencies": {
-    "@civitas-cerebrum/element-interactions": "^0.1.6",
-    "@playwright/test": "^1.59.1",
-    "fsevents": "^2.3.2",
-    "playwright": "^1.59.1",
-    "playwright-core": "^1.59.1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "@civitas-cerebrum/element-interactions": "^0.1.6"
+  }
 }

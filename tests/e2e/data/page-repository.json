@@ -1,10 +1,12 @@
 {
   "pages": [
     {
-      "name": "NavigationBar",
+      "name": "Sidebar",
       "elements": [
-        { "elementName": "topbar", "selector": { "css": "[data-testid='topbar']" } },
-        { "elementName": "sidebarToggle", "selector": { "css": "[data-testid='sidebar-toggle']" } },
+        { "elementName": "sidebar", "selector": { "css": "[data-testid='sidebar']" } },
+        { "elementName": "logo", "selector": { "css": "[data-testid='logo']" } },
+        { "elementName": "allBooksLink", "selector": { "css": "[data-testid='nav-all-books']" } },
+        { "elementName": "marketplaceLink", "selector": { "css": "[data-testid='nav-marketplace']" } },
         { "elementName": "loginLink", "selector": { "css": "[data-testid='nav-login']" } },
         { "elementName": "signupLink", "selector": { "css": "[data-testid='nav-signup']" } },
         { "elementName": "cartLink", "selector": { "css": "[data-testid='nav-cart']" } },
@@ -12,83 +14,188 @@
         { "elementName": "sellLink", "selector": { "css": "[data-testid='nav-sell']" } },
         { "elementName": "profileLink", "selector": { "css": "[data-testid='nav-profile']" } },
         { "elementName": "logoutButton", "selector": { "css": "[data-testid='logout-btn']" } },
-        { "elementName": "cartBadge", "selector": { "css": "[data-testid='cart-badge']" } }
+        { "elementName": "cartBadge", "selector": { "css": "[data-testid='cart-badge']" } },
+        { "elementName": "userBalance", "selector": { "css": "[data-testid='user-balance']" } },
+        { "elementName": "themeToggle", "selector": { "css": "[data-testid='theme-toggle']" } }
+      ]
+    },
+    {
+      "name": "TopBar",
+      "elements": [
+        { "elementName": "topbar", "selector": { "css": "[data-testid='topbar']" } },
+        { "elementName": "sidebarToggle", "selector": { "css": "[data-testid='sidebar-toggle']" } },
+        { "elementName": "mobileSearchBtn", "selector": { "css": "[data-testid='mobile-search-btn']" } },
+        { "elementName": "mobileCartBtn", "selector": { "css": "[data-testid='mobile-cart-btn']" } },
+        { "elementName": "cartBadgeMobile", "selector": { "css": "[data-testid='cart-badge-mobile']" } }
       ]
     },
     {
       "name": "HomePage",
       "elements": [
-        { "elementName": "bookGrid", "selector": { "css": "[data-testid='book-grid']" } },
+        { "elementName": "homePage", "selector": { "css": "[data-testid='home-page']" } },
         { "elementName": "searchInput", "selector": { "css": "[data-testid='search-input']" } },
-        { "elementName": "pagination", "selector": { "css": "[data-testid='pagination']" } },
+        { "elementName": "bookGrid", "selector": { "css": "[data-testid='book-grid']" } },
+        { "elementName": "loadingBooks", "selector": { "css": "[data-testid='loading-books']" } },
+        { "elementName": "noBooks", "selector": { "css": "[data-testid='no-books']" } },
+        { "elementName": "prevPage", "selector": { "css": "[data-testid='prev-page']" } },
         { "elementName": "nextPage", "selector": { "css": "[data-testid='next-page']" } },
-        { "elementName": "prevPage", "selector": { "css": "[data-testid='prev-page']" } }
+        { "elementName": "genreChips", "selector": { "css": "[data-testid='genre-chips']" } },
+        { "elementName": "bookCards", "selector": { "css": "[data-testid^='book-card-']" } }
+      ]
+    },
+    {
+      "name": "BookCard",
+      "elements": [
+        { "elementName": "card", "selector": { "css": "[data-testid^='book-card-']" } },
+        { "elementName": "title", "selector": { "css": "[data-testid^='book-title-']" } },
+        { "elementName": "author", "selector": { "css": "[data-testid^='book-author-']" } },
+        { "elementName": "genre", "selector": { "css": "[data-testid^='book-genre-']" } },
+        { "elementName": "price", "selector": { "css": "[data-testid^='book-price-']" } },
+        { "elementName": "addToCart", "selector": { "css": "[data-testid^='add-to-cart-book']" } },
+        { "elementName": "outOfStock", "selector": { "css": "[data-testid^='out-of-stock-']" } }
       ]
     },
     {
       "name": "BookDetailPage",
       "elements": [
-        { "elementName": "bookTitle", "selector": { "css": "[data-testid='book-detail-title']" } },
-        { "elementName": "bookPrice", "selector": { "css": "[data-testid='book-detail-price']" } },
-        { "elementName": "addToCartButton", "selector": { "css": "[data-testid='add-to-cart-detail']" } }
+        { "elementName": "page", "selector": { "css": "[data-testid='book-detail-page']" } },
+        { "elementName": "title", "selector": { "css": "[data-testid='book-detail-title']" } },
+        { "elementName": "author", "selector": { "css": "[data-testid='book-detail-author']" } },
+        { "elementName": "genre", "selector": { "css": "[data-testid='book-detail-genre']" } },
+        { "elementName": "description", "selector": { "css": "[data-testid='book-detail-description']" } },
+        { "elementName": "price", "selector": { "css": "[data-testid='book-detail-price']" } },
+        { "elementName": "stock", "selector": { "css": "[data-testid='book-detail-stock']" } },
+        { "elementName": "addToCartButton", "selector": { "css": "[data-testid='add-to-cart-detail']" } },
+        { "elementName": "outOfStock", "selector": { "css": "[data-testid='out-of-stock']" } },
+        { "elementName": "loading", "selector": { "css": "[data-testid='loading']" } },
+        { "elementName": "notFound", "selector": { "css": "[data-testid='not-found']" } }
       ]
     },
     {
       "name": "LoginPage",
       "elements": [
+        { "elementName": "page", "selector": { "css": "[data-testid='login-page']" } },
+        { "elementName": "form", "selector": { "css": "[data-testid='login-form']" } },
         { "elementName": "emailInput", "selector": { "css": "[data-testid='login-email']" } },
         { "elementName": "passwordInput", "selector": { "css": "[data-testid='login-password']" } },
-        { "elementName": "submitButton", "selector": { "css": "button[type='submit']" } }
+        { "elementName": "submitButton", "selector": { "css": "[data-testid='login-submit']" } },
+        { "elementName": "errorMessage", "selector": { "css": "[data-testid='login-error']" } },
+        { "elementName": "signupLink", "selector": { "css": "[data-testid='signup-link']" } }
       ]
     },
     {
       "name": "SignupPage",
       "elements": [
+        { "elementName": "page", "selector": { "css": "[data-testid='signup-page']" } },
+        { "elementName": "form", "selector": { "css": "[data-testid='signup-form']" } },
+        { "elementName": "usernameInput", "selector": { "css": "[data-testid='signup-username']" } },
         { "elementName": "emailInput", "selector": { "css": "[data-testid='signup-email']" } },
         { "elementName": "passwordInput", "selector": { "css": "[data-testid='signup-password']" } },
-        { "elementName": "usernameInput", "selector": { "css": "[data-testid='signup-username']" } },
-        { "elementName": "submitButton", "selector": { "css": "button[type='submit']" } }
+        { "elementName": "submitButton", "selector": { "css": "[data-testid='signup-submit']" } },
+        { "elementName": "errorMessage", "selector": { "css": "[data-testid='signup-error']" } },
+        { "elementName": "loginLink", "selector": { "css": "[data-testid='login-link']" } }
       ]
     },
     {
       "name": "CartPage",
       "elements": [
-        { "elementName": "cartContainer", "selector": { "css": "[data-testid='cart-page']" } },
-        { "elementName": "cartEmpty", "selector": { "css": "[data-testid='cart-empty']" } },
+        { "elementName": "page", "selector": { "css": "[data-testid='cart-page']" } },
+        { "elementName": "emptyMessage", "selector": { "css": "[data-testid='cart-empty']" } },
         { "elementName": "cartTotal", "selector": { "css": "[data-testid='cart-total']" } },
-        { "elementName": "clearCartButton", "selector": { "css": "[data-testid='cart-clear']" } },
-        { "elementName": "checkoutButton", "selector": { "css": "[data-testid='checkout-btn']" } }
+        { "elementName": "clearButton", "selector": { "css": "[data-testid='cart-clear']" } },
+        { "elementName": "checkoutButton", "selector": { "css": "[data-testid='checkout-btn']" } },
+        { "elementName": "cartItems", "selector": { "css": "[data-testid^='cart-item-']" } }
+      ]
+    },
+    {
+      "name": "CartItem",
+      "elements": [
+        { "elementName": "item", "selector": { "css": "[data-testid^='cart-item-']" } },
+        { "elementName": "title", "selector": { "css": "[data-testid^='cart-item-title-']" } },
+        { "elementName": "price", "selector": { "css": "[data-testid^='cart-item-price-']" } },
+        { "elementName": "quantity", "selector": { "css": "span[data-testid^='cart-qty-']" } },
+        { "elementName": "plusButton", "selector": { "css": "[data-testid^='cart-qty-plus-']" } },
+        { "elementName": "minusButton", "selector": { "css": "[data-testid^='cart-qty-minus-']" } },
+        { "elementName": "removeButton", "selector": { "css": "[data-testid^='cart-remove-']" } }
       ]
     },
     {
       "name": "OrdersPage",
       "elements": [
-        { "elementName": "ordersContainer", "selector": { "css": "[data-testid='orders-page']" } },
-        { "elementName": "noOrders", "selector": { "css": "[data-testid='no-orders']" } }
+        { "elementName": "page", "selector": { "css": "[data-testid='orders-page']" } },
+        { "elementName": "noOrders", "selector": { "css": "[data-testid='no-orders']" } },
+        { "elementName": "orderCards", "selector": { "css": "[data-testid^='order-card-']" } },
+        { "elementName": "loading", "selector": { "css": "[data-testid='loading']" } }
+      ]
+    },
+    {
+      "name": "OrderCard",
+      "elements": [
+        { "elementName": "card", "selector": { "css": "[data-testid^='order-card-']" } },
+        { "elementName": "status", "selector": { "css": "[data-testid^='order-status-']" } }
+      ]
+    },
+    {
+      "name": "OrderDetailPage",
+      "elements": [
+        { "elementName": "page", "selector": { "css": "[data-testid='order-detail-page']" } },
+        { "elementName": "orderTotal", "selector": { "css": "[data-testid='order-total']" } },
+        { "elementName": "orderItems", "selector": { "css": "[data-testid^='order-item-']" } },
+        { "elementName": "returnButton", "selector": { "css": "[data-testid^='return-order-']" } },
+        { "elementName": "returnCountdown", "selector": { "css": "[data-testid='return-countdown']" } },
+        { "elementName": "returnExpired", "selector": { "css": "[data-testid='return-expired']" } },
+        { "elementName": "orderStatus", "selector": { "css": "[data-testid^='order-status-']" } },
+        { "elementName": "loading", "selector": { "css": "[data-testid='loading']" } },
+        { "elementName": "notFound", "selector": { "css": "[data-testid='not-found']" } }
       ]
     },
     {
       "name": "MarketplacePage",
       "elements": [
-        { "elementName": "listingCards", "selector": { "css": "[class*='listing']" } }
+        { "elementName": "page", "selector": { "css": "[data-testid='marketplace-page']" } },
+        { "elementName": "noListings", "selector": { "css": "[data-testid='no-listings']" } },
+        { "elementName": "listingCards", "selector": { "css": "[data-testid^='listing-card-']" } },
+        { "elementName": "loading", "selector": { "css": "[data-testid='loading']" } }
+      ]
+    },
+    {
+      "name": "ListingCard",
+      "elements": [
+        { "elementName": "card", "selector": { "css": "[data-testid^='listing-card-']" } },
+        { "elementName": "title", "selector": { "css": "[data-testid^='listing-title-']" } },
+        { "elementName": "conditionBadge", "selector": { "css": "[data-testid^='listing-condition-badge-']" } },
+        { "elementName": "price", "selector": { "css": "[data-testid^='listing-price-']" } },
+        { "elementName": "buyButton", "selector": { "css": "[data-testid^='listing-buy-']" } }
       ]
     },
     {
       "name": "CreateListingPage",
       "elements": [
+        { "elementName": "page", "selector": { "css": "[data-testid='create-listing-page']" } },
         { "elementName": "bookSelect", "selector": { "css": "[data-testid='listing-book-select']" } },
         { "elementName": "conditionSelect", "selector": { "css": "[data-testid='listing-condition']" } },
         { "elementName": "priceInput", "selector": { "css": "[data-testid='listing-price']" } },
-        { "elementName": "createButton", "selector": { "css": "[data-testid='listing-create']" } }
+        { "elementName": "createButton", "selector": { "css": "[data-testid='listing-create']" } },
+        { "elementName": "errorMessage", "selector": { "css": "[data-testid='listing-error']" } }
       ]
     },
     {
       "name": "ProfilePage",
       "elements": [
-        { "elementName": "profileContainer", "selector": { "css": "[data-testid='profile-page']" } },
+        { "elementName": "page", "selector": { "css": "[data-testid='profile-page']" } },
         { "elementName": "username", "selector": { "css": "[data-testid='profile-username']" } },
         { "elementName": "email", "selector": { "css": "[data-testid='profile-email']" } },
-        { "elementName": "balance", "selector": { "css": "[data-testid='profile-balance']" } }
+        { "elementName": "balance", "selector": { "css": "[data-testid='profile-balance']" } },
+        { "elementName": "noListings", "selector": { "css": "[data-testid='no-listings']" } },
+        { "elementName": "myListings", "selector": { "css": "[data-testid^='my-listing-']" } },
+        { "elementName": "cancelListingButton", "selector": { "css": "[data-testid^='cancel-listing-']" } }
+      ]
+    },
+    {
+      "name": "GenreFilter",
+      "elements": [
+        { "elementName": "chips", "selector": { "css": "[data-testid='genre-chips']" } },
+        { "elementName": "chip", "selector": { "css": "[data-testid^='genre-chip-']" } }
       ]
     }
   ]

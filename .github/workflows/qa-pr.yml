@@ -12,9 +12,29 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - name: Trigger QA Agent
+      - name: QA Agent — PR Review
         run: |
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST http://localhost:3001/trigger \
+          echo ""
+          echo "  ███╗   ███╗ █████╗  ██████╗ ███╗   ██╗██╗   ██╗███╗   ███╗"
+          echo "  ████╗ ████║██╔══██╗██╔════╝ ████╗  ██║██║   ██║████╗ ████║"
+          echo "  ██╔████╔██║███████║██║  ███╗██╔██╗ ██║██║   ██║██╔████╔██║"
+          echo "  ██║╚██╔╝██║██╔══██║██║   ██║██║╚██╗██║██║   ██║██║╚██╔╝██║"
+          echo "  ██║ ╚═╝ ██║██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝██║ ╚═╝ ██║"
+          echo "  ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚═╝     ╚═╝"
+          echo "                          ██████╗ ██████╗ ██╗   ██╗███████╗"
+          echo "                         ██╔═══██╗██╔══██╗██║   ██║██╔════╝"
+          echo "                         ██║   ██║██████╔╝██║   ██║███████╗"
+          echo "                         ██║   ██║██╔═══╝ ██║   ██║╚════██║"
+          echo "                         ╚██████╔╝██║     ╚██████╔╝███████║"
+          echo "                          ╚═════╝ ╚═╝      ╚═════╝ ╚══════╝"
+          echo ""
+          echo "  Agentic Quality Assurance Pipeline"
+          echo "  Mode: PR Review | PR: #${{ github.event.pull_request.number }}"
+          echo "  Repo: ${{ github.repository }}"
+          echo ""
+
+          # Trigger the QA Agent
+          RESPONSE=$(curl -s -X POST http://localhost:3001/trigger \
             -H "Content-Type: application/json" \
             -d "{
               \"repo\": \"${{ github.repository }}\",
@@ -24,12 +44,47 @@ jobs:
               \"headBranch\": \"${{ github.event.pull_request.head.ref }}\"
             }")
 
-          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
+          RUN_ID=$(echo "$RESPONSE" | python3 -c "import json,sys; print(json.load(sys.stdin).get('runId',''))" 2>/dev/null)
 
-          echo "Response: $BODY (HTTP $HTTP_CODE)"
-
-          if [ "$HTTP_CODE" -ge 400 ]; then
-            echo "QA Agent service returned error"
+          if [ -z "$RUN_ID" ]; then
+            echo "Failed to trigger QA Agent: $RESPONSE"
             exit 1
           fi
+
+          echo "[QA Agent] Run started: $RUN_ID"
+          echo ""
+
+          # Poll for progress
+          LAST_COUNT=0
+          while true; do
+            STATUS=$(curl -s http://localhost:3001/runs/$RUN_ID 2>/dev/null)
+            RUN_STATUS=$(echo "$STATUS" | python3 -c "import json,sys; print(json.load(sys.stdin).get('status',''))" 2>/dev/null)
+
+            # Print new progress lines
+            PROGRESS=$(echo "$STATUS" | python3 -c "
+          import json,sys
+          d = json.load(sys.stdin)
+          for line in d.get('progress', []):
+              print('[QA Agent]', line)
+          " 2>/dev/null)
+            CURRENT_COUNT=$(echo "$PROGRESS" | wc -l | tr -d ' ')
+
+            if [ "$CURRENT_COUNT" -gt "$LAST_COUNT" ]; then
+              echo "$PROGRESS" | tail -n +$((LAST_COUNT + 1))
+              LAST_COUNT=$CURRENT_COUNT
+            fi
+
+            # Check if done
+            if [ "$RUN_STATUS" = "completed" ] || [ "$RUN_STATUS" = "failed" ]; then
+              echo ""
+              echo "[QA Agent] Run $RUN_STATUS"
+              if [ "$RUN_STATUS" = "failed" ]; then
+                ERROR=$(echo "$STATUS" | python3 -c "import json,sys; print(json.load(sys.stdin).get('error','Unknown error'))" 2>/dev/null)
+                echo "[QA Agent] Error: $ERROR"
+                exit 1
+              fi
+              break
+            fi
+
+            sleep 10
+          done

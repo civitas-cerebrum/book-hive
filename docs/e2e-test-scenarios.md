@@ -1,173 +1,150 @@
 # E2E Test Scenarios
 
-## Test Suite Overview
-
-**Total Tests:** 99+ (63 existing + 43 new + 2 bug reproduction)
-**Framework:** Playwright with custom fixtures
-**Base URL:** http://localhost:7547
-**API URL:** http://localhost:8080
-
----
-
-## Test Files
-
-### Existing Tests (from baseline)
-
-#### auth.spec.ts (9 tests)
-- Login page displays form elements
-- Successful login with valid credentials
-- Login with invalid credentials stays on login page
-- Login with empty email shows HTML5 validation
-- Signup link navigates to signup page
-- Signup page displays form elements
-- Successful signup with valid data
-- Signup with existing email shows error
-- Logout returns to guest state
-
-#### book-detail.spec.ts (5 tests)
-- Displays complete book information
-- Shows genre badge correctly
-- Shows add-to-cart for unauthenticated users
-- Shows not found for non-existent book
-- Different book shows different details
-
-#### cart.spec.ts (8 tests)
-- Empty cart shows message
-- Add item from home page
-- Cart displays items correctly
-- Update item quantity (increase)
-- Decrease item quantity
-- Remove item from cart
-- Clear entire cart
-- Checkout creates order
-
-#### home.spec.ts (9 tests)
-- Displays book grid with cards
-- Each card shows title, author, genre, price
-- First book card correct data
-- Search filters by title
-- Search filters by author
-- Search with no results
-- Pagination forward/backward
-- Clicking book card navigates to detail
-- Genre filter from sidebar
-
-#### marketplace.spec.ts (7 tests)
-- Displays marketplace page
-- Shows listings from seed data
-- Listing card details
-- Create listing form elements
-- Create listing successfully
-- Sell link visible when authenticated
-- Cancel listing from profile
-
-#### navigation.spec.ts (18 tests)
-- Sidebar display and guest navigation
-- All Books, Marketplace, Login, Sign Up links
-- Authenticated navigation items
-- Cart, Orders, Sell, Profile navigation
-- User balance display
-- 6 genre filter tests (Fiction, Sci-Fi, Non-Fiction, Biography, Fantasy, Mystery)
-
-#### orders.spec.ts (5 tests)
-- Orders page display
-- Order after checkout
-- Navigate to order detail
-- Order status display
-- Balance deduction after checkout
-
-#### profile.spec.ts (4 tests)
-- Profile page user information
-- Profile listings section
-- Balance display
-- Auth required for profile
+## Summary
+- **Total tests:** 114 (112 passing + 2 bug reproduction)
+- **Test files:** 19
+- **Coverage areas:** 10 pages, 17 functional spec files, 2 bug discovery tests
+- **Framework:** Playwright with Steps API
 
 ---
 
-### New Tests (added in this session)
+## HomePage (home.spec.ts) — 9 tests
+1. **displays book grid with cards on load** — Verify 12 book cards in grid
+2. **each book card shows title, author, genre and price** — All card fields present
+3. **first book card has correct data** — "To Kill a Mockingbird" first
+4. **search filters books by title** — Search "Dune", only Dune shown
+5. **search filters books by author** — Search "Harper Lee", only her books
+6. **search with no results shows empty state** — Nonsense query shows "No books found"
+7. **pagination navigates between pages** — Next/Previous buttons work
+8. **pagination previous button works** — Returns to page 1
+9. **clicking book card navigates to detail** — Card click goes to /books/{id}
 
-#### cart-quantity.spec.ts (5 tests)
-- Increase quantity with plus button
-- Minus button disabled at quantity 1
-- Remove item with remove button
-- Cart item displays title and price
-- Cart total updates when quantity changes
+## BookDetailPage (book-detail.spec.ts, book-detail-auth.spec.ts) — 11 tests
+1. **displays complete book information** — Title, author, price, description, stock
+2. **shows genre badge** — Fiction badge on book-001
+3. **no add-to-cart for unauthenticated** — Button hidden when logged out
+4. **non-existent book shows not-found** — /books/book-999 shows error
+5. **different book shows different details** — Dune/Frank Herbert/Sci-Fi
+6. **add-to-cart button when logged in** — Button visible after login
+7. **add to cart updates badge** — Cart badge appears in sidebar
+8. **stock count displayed** — "X in stock" text shown
+9. **description displayed** — Long description text present
+10. **Fantasy genre book** — book-034 shows Fantasy
+11. **Mystery genre book** — book-042 shows Mystery
 
-#### search-pagination.spec.ts (8 tests)
-- Search query appears in URL
-- Pagination resets when searching
-- Case-insensitive search
-- Search by author name
-- Empty state for nonexistent search
-- Genre filter displays correct books
-- Clear search when clicking All Books
-- Genre filter updates URL
+## Authentication (auth.spec.ts, auth-edge.spec.ts) — 16 tests
+1. **login page form elements** — Email, password, submit, signup link
+2. **signup page form elements** — Username, email, password, submit
+3. **successful login redirects home** — Valid creds redirect to /
+4. **invalid login stays on page** — Bad creds keep user on /login
+5. **signup link navigation** — Login -> Signup link works
+6. **login link navigation** — Signup -> Login link works
+7. **successful signup redirects** — New user created and logged in
+8. **logout returns to unauth** — Logout button clears session
+9. **auth sidebar shows links** — Cart, Orders, Sell, Profile visible
+10. **unauth sidebar shows login/signup** — Login, Sign Up visible
+11. **duplicate signup error** — Existing email stays on /signup
+12. **signup form validation** — Required attribute on email
+13. **login form validation** — Required attribute on email
+14. **seeded user balance** — $100.00 for testuser1
+15. **session persists across pages** — Logout button on all pages
+16. **new signup zero balance** — New user starts at $0.00
 
-#### balance-flow.spec.ts (3 tests)
-- Initial balance $100.00
-- Balance matches on profile and sidebar
-- Balance refunded after return
+## Cart (cart.spec.ts, cart-advanced.spec.ts) — 17 tests
+1. **empty cart message** — "Your cart is empty"
+2. **add from book detail** — Item appears in cart
+3. **add from home page card** — Quick add works
+4. **cart displays title and price** — Item info shown
+5. **increase quantity** — + button increments
+6. **decrease quantity** — - button decrements
+7. **remove item** — Remove clears item
+8. **clear cart** — Clear all button works
+9. **cart total correct** — Sum of item prices
+10. **checkout creates order** — Redirects to /orders
+11. **same book twice increases qty** — Qty=2 after double add
+12. **multiple books multiple items** — 2+ distinct items
+13. **cart badge count** — Badge shows "1"
+14. **minus disabled at qty 1** — Cannot go below 1
+15. **total for multiple items** — Correct sum
+16. **checkout empties cart** — Cart empty after checkout
 
-#### order-details.spec.ts (5 tests)
-- Order total on detail page
-- Correct item count in order
-- Multiple orders on list
-- RETURNED status after return
-- Not found for invalid order ID
+## Orders (orders.spec.ts, order-return.spec.ts) — 9 tests
+1. **no orders for fresh user** — "No orders yet" message
+2. **order after checkout** — Order card visible
+3. **order card status badge** — Status shown
+4. **click order navigates to detail** — /orders/{id}
+5. **order detail items and total** — Items list + total
+6. **return button within window** — Return available
+7. **return order** — Status changes to RETURNED
+8. **order total displayed** — $ amount shown
+9. **multi-item order** — 2 items in order detail
 
-#### book-detail-auth.spec.ts (3 tests)
-- Add to cart from detail updates badge
-- Complete Sci-Fi book information
-- Navigate from card to detail
+## Marketplace (marketplace.spec.ts, marketplace-advanced.spec.ts) — 11 tests
+1. **marketplace page loads** — Heading visible
+2. **empty marketplace** — "No listings" message
+3. **sidebar link navigation** — /marketplace
+4. **create listing page elements** — Form fields present
+5. **sell link navigation** — /marketplace/sell
+6. **create listing and verify** — Listing on marketplace
+7. **listing cards show details** — Title, condition, price
+8. **buy from another user** — Listing removed after purchase
+9. **cancel own listing** — Removed from profile
+10. **listing form validation** — Submit without fields
+11. **created listing price correct** — $15.00 shown
 
-#### marketplace-buy.spec.ts (4 tests)
-- Buyer redirected to order after purchase
-- Listing shows title, condition, price
-- No buy button on own listing
-- No buy button for guests
+## Navigation (navigation.spec.ts) — 12 tests
+1. **sidebar logo and browse** — Logo, All Books, Marketplace
+2. **genre category links** — Fiction, Sci-Fi, Non-Fiction text
+3. **All Books link** — Navigates to /
+4. **Marketplace link** — Navigates to /marketplace
+5. **Login link** — Navigates to /login
+6. **Sign Up link** — Navigates to /signup
+7. **Theme toggle present** — Button exists
+8. **Theme toggle changes theme** — Theme attribute updates
+9. **Cart link (auth)** — /cart
+10. **Orders link (auth)** — /orders
+11. **Protected route redirect** — /cart -> /login
+12. **Profile link (auth)** — /profile
 
-#### auth-session.spec.ts (7 tests)
-- Auth persists across navigation
-- Authenticated sidebar items
-- Guest sidebar items
-- Login error stays on page
-- Cart persists across SPA navigation
-- New user balance after signup
-- Protected routes redirect to login
+## Genre Filtering (genre-filter.spec.ts) — 6 tests
+1. **genre chips in DOM** — 7 chip buttons attached
+2. **genre chip click filters** — Fiction books only
+3. **sidebar Fiction link** — Fiction genre filter
+4. **sidebar Sci-Fi link** — Sci-Fi genre filter
+5. **All Books clears filter** — Mixed genres shown
+6. **URL genre parameter** — /?genre=Biography works
 
-#### theme-ui.spec.ts (8 tests)
-- Toggle theme
-- Different icon per theme
-- Theme persists across pages
-- Genre filter links in sidebar
-- Emoji book cover on cards
-- Pagination info display
-- Next button disabled on last page
-- 12 books per page
+## Profile (profile.spec.ts) — 5 tests
+1. **profile page displays info** — Username, email, balance
+2. **correct username** — testuser1
+3. **correct email** — testuser1@bookhive.test
+4. **balance shown** — $ amount displayed
+5. **profile link navigation** — /profile
 
----
+## Theme (theme.spec.ts) — 3 tests
+1. **toggle switches theme** — Theme changes
+2. **theme persists navigation** — Same after nav
+3. **toggle accessible** — Enabled button
 
-### Bug Discovery Tests
+## Negative Tests (negative-tests.spec.ts) — 11 tests
+1. **non-existent route** — Handled gracefully
+2. **non-existent book** — Not-found state
+3. **empty search** — Shows all books
+4. **special chars in search** — No crash
+5. **XSS in search** — Sanitized
+6. **cart without auth** — Redirect to /login
+7. **orders without auth** — Redirect to /login
+8. **profile without auth** — Redirect to /login
+9. **sell without auth** — Redirect to /login
+10. **very long search query** — Handles gracefully
+11. **last page disables Next** — Next button disabled
 
-#### bug-discovery/bugs.spec.ts (2 tests)
-- BUG-001: Cart badge disappears after hard navigation
-- BUG-003: Signup user shows $0.00 balance
+## User Journeys (user-journey.spec.ts) — 4 tests
+1. **complete shopping flow** — Browse -> Cart -> Checkout -> Orders
+2. **marketplace flow** — Create -> Verify -> Cancel
+3. **search and detail flow** — Search -> Detail -> Back
+4. **balance after purchase** — Balance decreases after buying listing
 
----
-
-## Coverage Summary
-
-| Feature Area | Tests | Coverage |
-|---|---|---|
-| Authentication (Login/Signup/Logout) | 16 | High |
-| Home Page (Browse/Search) | 17 | High |
-| Book Detail | 8 | High |
-| Cart (Add/Remove/Quantity/Checkout) | 13 | High |
-| Orders (List/Detail/Return) | 10 | High |
-| Marketplace (List/Create/Buy/Cancel) | 11 | High |
-| Navigation & Sidebar | 18 | High |
-| Profile | 4 | Medium |
-| Theme Toggle | 3 | Medium |
-| UI/Pagination | 8 | High |
-| Balance/Financial | 3 | Medium |
-| Bug Reproduction | 2 | N/A |
+## Bug Discovery (bug-discovery/element-bugs.spec.ts) — 2 tests
+1. **BUG-001: login error message missing** — FAILS (confirmed bug)
+2. **BUG-002: genre chips hidden** — FAILS (confirmed bug)

@@ -40,6 +40,8 @@ tests/e2e/node_modules/
 tests/e2e/test-results/
 tests/e2e/playwright-report/
 tests/e2e/blob-report/
+tests/e2e/videos/
+tests/e2e/package-lock.json
 
 # Magnum Opus
 .magnum-opus/

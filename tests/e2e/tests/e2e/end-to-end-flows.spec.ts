@@ -4,6 +4,11 @@ import { DropdownSelectType } from '@civitas-cerebrum/element-interactions';
 test.describe('End-to-End User Journeys', () => {
   test.describe.configure({ timeout: 60_000 });
 
+  test.beforeAll(async () => {
+    // Reset database to ensure clean balance state for checkout flows
+    await fetch('http://localhost:8080/api/reset', { method: 'POST' });
+  });
+
   test('complete purchase flow: login, add to cart, checkout', async ({ steps }) => {
     // Login
     await steps.navigateTo('/login');

@@ -3,8 +3,13 @@ import { test, expect } from '../fixtures/base';
 test.describe('Cart & Checkout', () => {
   test.describe.configure({ timeout: 60_000 });
 
+  test.beforeAll(async () => {
+    // Reset database to ensure clean balance state for checkout tests
+    await fetch('http://localhost:8080/api/reset', { method: 'POST' });
+  });
+
   test.beforeEach(async ({ steps }) => {
-    // Reset the database
+    // Login before each test
     await steps.navigateTo('/login');
     await steps.fill('LoginPage', 'emailInput', 'testuser1@bookhive.test');
     await steps.fill('LoginPage', 'passwordInput', 'Test1234!');

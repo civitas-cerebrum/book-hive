@@ -1,0 +1,35 @@
+name: QA Agent — PR Review
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  qa-review:
+    name: QA Agent — PR Review
+    runs-on: self-hosted
+    timeout-minutes: 60
+
+    steps:
+      - name: Trigger QA Agent
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST http://localhost:3001/trigger \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"repo\": \"${{ github.repository }}\",
+              \"mode\": \"pr\",
+              \"prNumber\": ${{ github.event.pull_request.number }},
+              \"baseBranch\": \"${{ github.event.pull_request.base.ref }}\",
+              \"headBranch\": \"${{ github.event.pull_request.head.ref }}\"
+            }")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "Response: $BODY (HTTP $HTTP_CODE)"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "QA Agent service returned error"
+            exit 1
+          fi

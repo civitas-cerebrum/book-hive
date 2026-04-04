@@ -1,0 +1,133 @@
+{
+  "pages": [
+    {
+      "name": "NavBar",
+      "elements": [
+        { "elementName": "allBooksLink", "selector": { "css": "a[href='/']", "text": "All Books" } },
+        { "elementName": "marketplaceLink", "selector": { "css": "a[href='/marketplace']", "text": "Marketplace" } },
+        { "elementName": "loginLink", "selector": { "css": "a[href='/login']", "text": "Login" } },
+        { "elementName": "signUpLink", "selector": { "css": "a[href='/signup']", "text": "Sign Up" } },
+        { "elementName": "themeToggle", "selector": { "css": "[data-testid='theme-toggle']" } },
+        { "elementName": "fictionLink", "selector": { "css": "a[href='/?genre=Fiction']" } },
+        { "elementName": "sciFiLink", "selector": { "css": "a[href='/?genre=Sci-Fi']" } },
+        { "elementName": "nonFictionLink", "selector": { "css": "a[href='/?genre=Non-Fiction']" } },
+        { "elementName": "biographyLink", "selector": { "css": "a[href='/?genre=Biography']" } },
+        { "elementName": "fantasyLink", "selector": { "css": "a[href='/?genre=Fantasy']" } },
+        { "elementName": "mysteryLink", "selector": { "css": "a[href='/?genre=Mystery']" } },
+        { "elementName": "cartLink", "selector": { "css": "[data-testid='nav-cart']" } },
+        { "elementName": "ordersLink", "selector": { "css": "[data-testid='nav-orders']" } },
+        { "elementName": "sellLink", "selector": { "css": "[data-testid='nav-sell']" } },
+        { "elementName": "profileLink", "selector": { "css": "[data-testid='nav-profile']" } },
+        { "elementName": "logoutButton", "selector": { "css": "[data-testid='logout-btn']" } },
+        { "elementName": "cartBadge", "selector": { "css": "[data-testid='cart-badge']" } }
+      ]
+    },
+    {
+      "name": "HomePage",
+      "elements": [
+        { "elementName": "searchInput", "selector": { "css": "[data-testid='search-input']" } },
+        { "elementName": "bookGrid", "selector": { "css": "[data-testid='book-grid']" } },
+        { "elementName": "bookCard", "selector": { "css": "[data-testid='book-grid'] a" } },
+        { "elementName": "bookTitle", "selector": { "css": "[data-testid='book-grid'] a div div:nth-child(2)" } },
+        { "elementName": "bookPrice", "selector": { "css": "[data-testid='book-grid'] a div div:last-child" } },
+        { "elementName": "pagination", "selector": { "css": "[data-testid='pagination']" } },
+        { "elementName": "nextPageButton", "selector": { "css": "[data-testid='next-page']" } },
+        { "elementName": "prevPageButton", "selector": { "css": "[data-testid='prev-page']" } },
+        { "elementName": "pageIndicator", "selector": { "css": "[data-testid='pagination'] span" } },
+        { "elementName": "searchIcon", "selector": { "css": "main div div:first-child span" } }
+      ]
+    },
+    {
+      "name": "BookDetailPage",
+      "elements": [
+        { "elementName": "bookTitle", "selector": { "css": "[data-testid='book-detail-title']" } },
+        { "elementName": "bookPrice", "selector": { "css": "[data-testid='book-detail-price']" } },
+        { "elementName": "addToCartButton", "selector": { "css": "[data-testid='add-to-cart-detail']" } },
+        { "elementName": "authorName", "selector": { "css": "main p:first-of-type" } },
+        { "elementName": "genreBadge", "selector": { "css": "main div > div:nth-child(2) > div:nth-child(3)" } },
+        { "elementName": "description", "selector": { "css": "main div > div:nth-child(2) > p:nth-of-type(2)" } },
+        { "elementName": "stockInfo", "selector": { "css": "main div > div:nth-child(2) > p:last-of-type" } },
+        { "elementName": "bookCover", "selector": { "css": "main div > div:first-child" } }
+      ]
+    },
+    {
+      "name": "LoginPage",
+      "elements": [
+        { "elementName": "heading", "selector": { "css": "main h1" } },
+        { "elementName": "emailInput", "selector": { "css": "[data-testid='login-email']" } },
+        { "elementName": "passwordInput", "selector": { "css": "[data-testid='login-password']" } },
+        { "elementName": "signInButton", "selector": { "css": "main button", "text": "Sign In" } },
+        { "elementName": "signUpLink", "selector": { "css": "main a[href='/signup']" } },
+        { "elementName": "errorMessage", "selector": { "css": "main [role='alert']" } }
+      ]
+    },
+    {
+      "name": "SignupPage",
+      "elements": [
+        { "elementName": "heading", "selector": { "css": "main h1" } },
+        { "elementName": "usernameInput", "selector": { "css": "[data-testid='signup-username']" } },
+        { "elementName": "emailInput", "selector": { "css": "[data-testid='signup-email']" } },
+        { "elementName": "passwordInput", "selector": { "css": "[data-testid='signup-password']" } },
+        { "elementName": "createAccountButton", "selector": { "css": "main button", "text": "Create Account" } },
+        { "elementName": "signInLink", "selector": { "css": "main a[href='/login']" } },
+        { "elementName": "errorMessage", "selector": { "css": "main [role='alert']" } }
+      ]
+    },
+    {
+      "name": "CartPage",
+      "elements": [
+        { "elementName": "cartPage", "selector": { "css": "[data-testid='cart-page']" } },
+        { "elementName": "emptyCart", "selector": { "css": "[data-testid='cart-empty']" } },
+        { "elementName": "cartTotal", "selector": { "css": "[data-testid='cart-total']" } },
+        { "elementName": "clearCartButton", "selector": { "css": "[data-testid='cart-clear']" } },
+        { "elementName": "checkoutButton", "selector": { "css": "[data-testid='checkout-btn']" } },
+        { "elementName": "cartItem", "selector": { "css": "[data-testid^='cart-item-']" } },
+        { "elementName": "heading", "selector": { "css": "main h1" } }
+      ]
+    },
+    {
+      "name": "OrdersPage",
+      "elements": [
+        { "elementName": "ordersPage", "selector": { "css": "main" } },
+        { "elementName": "noOrders", "selector": { "css": "[data-testid='no-orders']" } },
+        { "elementName": "orderCard", "selector": { "css": "main a[href^='/orders/']" } },
+        { "elementName": "heading", "selector": { "css": "main h1" } }
+      ]
+    },
+    {
+      "name": "MarketplacePage",
+      "elements": [
+        { "elementName": "heading", "selector": { "css": "main h1" } },
+        { "elementName": "noListings", "selector": { "css": "main div div" } },
+        { "elementName": "listingCard", "selector": { "css": "[data-testid^='listing-']" } }
+      ]
+    },
+    {
+      "name": "CreateListingPage",
+      "elements": [
+        { "elementName": "bookSelect", "selector": { "css": "[data-testid='listing-book-select']" } },
+        { "elementName": "conditionSelect", "selector": { "css": "[data-testid='listing-condition']" } },
+        { "elementName": "priceInput", "selector": { "css": "[data-testid='listing-price']" } },
+        { "elementName": "createButton", "selector": { "css": "[data-testid='listing-create']" } }
+      ]
+    },
+    {
+      "name": "OrderDetailPage",
+      "elements": [
+        { "elementName": "heading", "selector": { "css": "main h1" } },
+        { "elementName": "orderStatus", "selector": { "css": "[data-testid^='order-status-']" } },
+        { "elementName": "orderTotal", "selector": { "css": "[data-testid='order-total']" } },
+        { "elementName": "returnButton", "selector": { "css": "main button", "text": "Return Order" } }
+      ]
+    },
+    {
+      "name": "ProfilePage",
+      "elements": [
+        { "elementName": "profilePage", "selector": { "css": "[data-testid='profile-page']" } },
+        { "elementName": "username", "selector": { "css": "[data-testid='profile-username']" } },
+        { "elementName": "email", "selector": { "css": "[data-testid='profile-email']" } },
+        { "elementName": "balance", "selector": { "css": "[data-testid='profile-balance']" } }
+      ]
+    }
+  ]
+}

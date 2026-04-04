@@ -4,13 +4,21 @@ import { DropdownSelectType } from '@civitas-cerebrum/element-interactions';
 test.describe('Marketplace & Listings', () => {
   test.describe.configure({ timeout: 60_000 });
 
-  test.beforeEach(async ({ steps }) => {
+  test.beforeEach(async ({ steps, page }) => {
     // Login
     await steps.navigateTo('/login');
     await steps.fill('LoginPage', 'emailInput', 'testuser1@bookhive.test');
     await steps.fill('LoginPage', 'passwordInput', 'Test1234!');
     await steps.click('LoginPage', 'submitButton');
     await steps.waitForNetworkIdle();
+
+    // Stabilised: cancel any existing marketplace listings to prevent duplicate listing
+    // rejections when tests are re-run without a full database reset
+    const listings = await page.request.get('http://localhost:8080/api/marketplace');
+    const listingsData = await listings.json();
+    for (const listing of listingsData) {
+      await page.request.delete(`http://localhost:8080/api/marketplace/listings/${listing.id}`).catch(() => {});
+    }
   });
 
   test('should create a marketplace listing and see it on marketplace', async ({ steps }) => {

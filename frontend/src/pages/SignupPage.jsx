@@ -12,9 +12,22 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const validateUsername = (name) => {
+    if (name.includes('<script>')) return 'Username cannot contain script tags';
+    if (name.length < 3) return 'Username must be at least 3 characters';
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    const validationError = validateUsername(username);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setLoading(true);
     try {
       await signup(username, email, password);

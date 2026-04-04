@@ -3,6 +3,12 @@ import { test, expect } from '../fixtures/base';
 test.describe('Cart & Checkout Flow', () => {
   test.describe.configure({ timeout: 60_000 });
 
+  // Stabilised: reset database before the suite to restore test user balance,
+  // which gets depleted across repeated test runs performing checkouts
+  test.beforeAll(async ({ request }) => {
+    await request.post('http://localhost:8080/api/reset');
+  });
+
   test.beforeEach(async ({ steps, page }) => {
     // Stabilised: clear cart via API before each test to prevent state leaking between tests
     await steps.navigateTo('/login');

@@ -32,7 +32,9 @@
         { "elementName": "nextPage", "selector": { "css": "[data-testid='next-page']" } },
         { "elementName": "prevPage", "selector": { "css": "[data-testid='prev-page']" } },
         { "elementName": "noBooks", "selector": { "css": "[data-testid='no-books']" } },
-        { "elementName": "loadingBooks", "selector": { "css": "[data-testid='loading-books']" } }
+        { "elementName": "loadingBooks", "selector": { "css": "[data-testid='loading-books']" } },
+        { "elementName": "pageInfo", "selector": { "css": "[data-testid='pagination'] span" } },
+        { "elementName": "addToCartButtons", "selector": { "css": "[data-testid^='add-to-cart-']" } }
       ]
     },
     {

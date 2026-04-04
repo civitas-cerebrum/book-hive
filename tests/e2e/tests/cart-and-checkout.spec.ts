@@ -3,13 +3,21 @@ import { test, expect } from './fixtures/base';
 test.describe('Cart & Checkout Flow', () => {
   test.describe.configure({ timeout: 60_000 });
 
-  test.beforeEach(async ({ steps }) => {
+  // Stabilised: reset database before the suite to restore test user balance,
+  // which gets depleted across repeated test runs performing checkouts
+  test.beforeAll(async ({ request }) => {
+    await request.post('http://localhost:8080/api/reset');
+  });
+
+  test.beforeEach(async ({ steps, page }) => {
     // Login
     await steps.navigateTo('/login');
     await steps.fill('LoginPage', 'emailInput', 'testuser1@bookhive.test');
     await steps.fill('LoginPage', 'passwordInput', 'Test1234!');
     await steps.click('LoginPage', 'submitButton');
     await steps.waitForNetworkIdle();
+    // Stabilised: clear cart to prevent accumulated items from prior tests
+    await page.request.delete('http://localhost:8080/api/cart');
   });
 
   test('should add book to cart, view cart, and checkout to order detail', async ({ steps }) => {

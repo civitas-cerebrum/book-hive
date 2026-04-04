@@ -1,131 +1,132 @@
 # E2E Test Scenarios
 
-## Home Page & Browsing
-
-### Display book catalog with search and pagination
-**Area:** HomePage
-**Steps:**
-1. Open the home page
-2. Verify the book grid is visible with book cards
-3. Verify pagination shows "Previous" disabled on first page
-4. Click "Next" to go to page 2
-5. Verify books are displayed on page 2
-6. Return to page 1 and search for "Dune"
-7. Verify search results show relevant books
-**Expected Result:** Book grid loads with cards, pagination works, search filters results.
-
-### Navigate to book detail page
-**Area:** BookDetailPage
-**Steps:**
-1. Navigate to /books/book-001
-2. Check title shows "To Kill a Mockingbird"
-3. Check author shows "Harper Lee"
-4. Check price, stock, and description are present
-**Expected Result:** All book details are displayed correctly.
-
-### Filter books by genre category
-**Area:** HomePage
-**Steps:**
-1. Navigate to /?genre=Sci-Fi
-2. Verify the book grid displays books
-**Expected Result:** Only Sci-Fi genre books appear in the grid.
+**Date:** 2026-04-04
+**Total tests:** 69
+**Pass rate:** 100% (69/69)
+**Coverage:** All 10 application pages, all major user flows
 
 ---
 
-## Authentication
+## Home Page & Browsing (12 tests)
 
-### Login with valid credentials
-**Area:** Auth
-**Steps:**
-1. Go to /login
-2. Enter testuser1@bookhive.test and password
-3. Click Sign In
-4. Verify redirect to home page
-5. Verify Cart, Orders, Profile, Logout links appear in navigation
-**Expected Result:** User is logged in and sees authenticated navigation.
+| Test | File |
+|------|------|
+| Display book catalog with search and pagination | `home-and-browse.spec.ts` |
+| Navigate to book detail page | `home-and-browse.spec.ts` |
+| Filter books by genre category | `home-and-browse.spec.ts` |
+| Display book catalog with cards | `home-browse.spec.ts` |
+| Display pagination controls | `home-browse.spec.ts` |
+| Navigate to next and previous pages | `home-browse.spec.ts` |
+| Search books by title | `home-browse.spec.ts` |
+| Display search icon | `home-browse.spec.ts` |
+| Paginate through all pages | `search-and-filter.spec.ts` |
+| Show no results for non-existent search | `search-and-filter.spec.ts` |
+| Search by author name | `search-and-filter.spec.ts` |
+| Clear search and show all books | `search-and-filter.spec.ts` |
 
-### Logout and show unauthenticated nav
-**Area:** Auth
-**Steps:**
-1. Log in with valid credentials
-2. Click Logout button
-3. Verify Login and Sign Up links appear in navigation
-**Expected Result:** User is logged out and sees unauthenticated navigation.
+## Genre Filtering (6 tests)
 
----
+| Test | File |
+|------|------|
+| Filter by Fiction genre | `genre-filter.spec.ts` |
+| Filter by Sci-Fi genre | `genre-filter.spec.ts` |
+| Return to all books from genre filter | `genre-filter.spec.ts` |
+| Filter by Biography genre | `search-and-filter.spec.ts` |
+| Filter by Fantasy genre | `search-and-filter.spec.ts` |
+| Filter by Mystery genre | `search-and-filter.spec.ts` |
 
-## Cart & Checkout Flow
+## Book Detail Page (6 tests)
 
-### Add book to cart, view cart, and checkout
-**Area:** Cart, Checkout
-**Steps:**
-1. Log in
-2. Go to a book detail page
-3. Click "Add to Cart"
-4. Navigate to the cart
-5. Verify cart has at least 1 item with total and checkout button
-6. Click Checkout
-7. Verify redirect to order detail page with order total and items
-**Expected Result:** Complete purchase flow works end-to-end.
+| Test | File |
+|------|------|
+| Display book details for Fiction book | `home-and-browse.spec.ts` |
+| Navigate from home to book detail by clicking card | `book-detail.spec.ts` |
+| Display book details for Sci-Fi book | `book-detail-extended.spec.ts` |
+| Show not-found for invalid book ID | `book-detail-extended.spec.ts` |
+| Show add to cart when logged in | `book-detail-extended.spec.ts` |
+| Hide add to cart when not logged in | `book-detail-extended.spec.ts` |
 
-### Show orders list with past orders
-**Area:** Orders
-**Steps:**
-1. Log in and complete a purchase
-2. Navigate to the orders page
-3. Verify at least one order card is visible
-**Expected Result:** Orders page shows completed orders.
+## Authentication (7 tests)
 
----
+| Test | File |
+|------|------|
+| Login with valid credentials | `auth.spec.ts` |
+| Logout and show unauthenticated nav | `auth.spec.ts` |
+| Display signup form with all fields | `signup.spec.ts` |
+| Navigate from signup to login | `signup.spec.ts` |
+| Navigate from login to signup | `signup.spec.ts` |
+| Register a new user | `signup.spec.ts` |
+| Show error for duplicate email | `signup.spec.ts` |
 
-## Marketplace & Listings
+## Cart & Checkout (9 tests)
 
-### Create a marketplace listing
-**Area:** Marketplace
-**Steps:**
-1. Log in
-2. Navigate to Sell a Book page
-3. Select a book from the dropdown
-4. Choose a condition (GOOD)
-5. Enter a price ($9.99)
-6. Click Create Listing
-7. Navigate to the marketplace page
-8. Verify at least one listing card appears
-**Expected Result:** Listing is created and visible on the marketplace.
+| Test | File |
+|------|------|
+| Add book to cart, view cart, checkout | `cart-and-checkout.spec.ts` |
+| Show orders list with past orders | `cart-and-checkout.spec.ts` |
+| Show empty cart initially | `cart-checkout.spec.ts` |
+| Add book from detail page | `cart-checkout.spec.ts` |
+| Complete checkout flow | `cart-checkout.spec.ts` |
+| Show empty cart message | `cart-extended.spec.ts` |
+| Clear cart using clear button | `cart-extended.spec.ts` |
+| Display cart total | `cart-extended.spec.ts` |
+| Add multiple books to cart | `cart-extended.spec.ts` |
 
-### Show user profile with balance and listings
-**Area:** Profile
-**Steps:**
-1. Log in
-2. Navigate to the profile page
-3. Verify username and email are displayed (non-empty)
-4. Verify balance is present
-**Expected Result:** Profile page shows user information.
+## Orders & Balance (6 tests)
 
----
+| Test | File |
+|------|------|
+| Display orders page heading | `orders.spec.ts` |
+| Checkout redirects to order detail | `orders.spec.ts` |
+| Display user balance in nav | `balance-and-orders.spec.ts` |
+| Balance deducts after checkout | `balance-and-orders.spec.ts` |
+| Show order items on detail page | `balance-and-orders.spec.ts` |
+| Navigate from orders list to detail | `balance-and-orders.spec.ts` |
 
-## Protected Routes
+## Marketplace (6 tests)
 
-### Redirect unauthenticated users from protected routes to login
-**Area:** Auth, Security
-**Steps:**
-1. Without logging in, navigate to /cart
-2. Verify redirect to /login
-3. Navigate to /orders — verify redirect to /login
-4. Navigate to /profile — verify redirect to /login
-5. Navigate to /marketplace/sell — verify redirect to /login
-**Expected Result:** All protected routes redirect unauthenticated users to the login page.
+| Test | File |
+|------|------|
+| Create marketplace listing | `marketplace.spec.ts` |
+| Show user profile with balance | `marketplace.spec.ts` |
+| Show no listings when empty | `marketplace-extended.spec.ts` |
+| Create listing and verify on marketplace | `marketplace-extended.spec.ts` |
+| Show listing on profile | `marketplace-extended.spec.ts` |
+| Navigate to create listing page | `create-listing.spec.ts` |
 
----
+## Profile (2 tests)
 
-## Bug Discovery
+| Test | File |
+|------|------|
+| Display user profile information | `profile.spec.ts` |
+| Logout returns to unauthenticated state | `profile.spec.ts` |
 
-### BUG-001: Login with invalid credentials should show error message
-**Area:** Auth (Bug)
-**Steps:**
-1. Navigate to /login
-2. Enter invalid email and password
-3. Click Sign In
-4. Check for error message
-**Expected Result:** Error message "Invalid credentials" or "Login failed" should be visible
-**Actual Result:** Page reloads with empty form, no error message shown (BUG-001)
+## Theme & Navigation (4 tests)
+
+| Test | File |
+|------|------|
+| Theme toggle | `theme-nav.spec.ts` |
+| Genre navigation links | `theme-nav.spec.ts` |
+| Marketplace link | `theme-nav.spec.ts` |
+| Unauthenticated cart redirect | `theme-nav.spec.ts` |
+
+## Edge Cases & Security (8 tests)
+
+| Test | File |
+|------|------|
+| Previous button disabled on page 1 | `edge-cases.spec.ts` |
+| Search form submission via Enter | `edge-cases.spec.ts` |
+| Direct URL access to book detail | `edge-cases.spec.ts` |
+| Direct URL access to genre filter | `edge-cases.spec.ts` |
+| Redirect unauth user from order detail | `edge-cases.spec.ts` |
+| Marketplace accessible without auth | `edge-cases.spec.ts` |
+| Book detail accessible without auth | `edge-cases.spec.ts` |
+| Protected routes redirect to login | `protected-routes.spec.ts` |
+
+## Bug Discovery (3 tests)
+
+| Test | File | Status |
+|------|------|--------|
+| Login invalid credentials shows error | `bug-discovery/element-bugs.spec.ts` | PASS (BUG-001 resolved) |
+| Negative price listing rejected | `bug-discovery/validation-bugs.spec.ts` | PASS (BUG-002 validated) |
+| Insufficient balance checkout no error | `bug-discovery/validation-bugs.spec.ts` | PASS (BUG-003 confirmed) |

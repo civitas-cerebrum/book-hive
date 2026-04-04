@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures/base';
 import { DropdownSelectType } from '@civitas-cerebrum/element-interactions';
 
-test.describe('Marketplace & Listings', () => {
+test.describe('Marketplace — Extended', () => {
   test.describe.configure({ timeout: 60_000 });
 
   test.beforeEach(async ({ steps, page }) => {
@@ -12,8 +12,7 @@ test.describe('Marketplace & Listings', () => {
     await steps.click('LoginPage', 'submitButton');
     await steps.waitForNetworkIdle();
 
-    // Stabilised: cancel any existing marketplace listings to prevent duplicate listing
-    // rejections when tests are re-run without a full database reset
+    // Clean up existing listings
     const listings = await page.request.get('http://localhost:8080/api/marketplace');
     const listingsData = await listings.json();
     for (const listing of listingsData) {
@@ -21,34 +20,43 @@ test.describe('Marketplace & Listings', () => {
     }
   });
 
-  test('should create a marketplace listing and see it on marketplace', async ({ steps }) => {
-    // Navigate to sell page
+  test('should show no listings message when marketplace is empty', async ({ steps }) => {
+    await steps.navigateTo('/marketplace');
+    await steps.waitForNetworkIdle();
+    await steps.verifyPresence('MarketplacePage', 'noListings');
+  });
+
+  test('should create listing and verify it appears on marketplace', async ({ steps }) => {
+    // Navigate to sell page and create listing
     await steps.click('Navigation', 'sellLink');
     await steps.waitForNetworkIdle();
     await steps.verifyPresence('CreateListingPage', 'createListingPage');
 
-    // Fill out listing form
     await steps.selectDropdown('CreateListingPage', 'bookSelect', { type: DropdownSelectType.INDEX, index: 1 });
-    await steps.selectDropdown('CreateListingPage', 'conditionSelect', { type: DropdownSelectType.VALUE, value: 'GOOD' });
-    await steps.fill('CreateListingPage', 'priceInput', '9.99');
+    await steps.selectDropdown('CreateListingPage', 'conditionSelect', { type: DropdownSelectType.VALUE, value: 'NEW' });
+    await steps.fill('CreateListingPage', 'priceInput', '15.99');
     await steps.click('CreateListingPage', 'createButton');
     await steps.waitForNetworkIdle();
 
-    // Should redirect to marketplace or show success
-    // Stabilised: add explicit wait after listing creation to allow backend to commit the listing
-    // before navigating to the marketplace page, preventing race condition flake
+    // Verify listing on marketplace
     await steps.navigateTo('/marketplace');
     await steps.waitForNetworkIdle();
-    await steps.waitForState('MarketplacePage', 'marketplacePage');
     await steps.verifyCount('MarketplacePage', 'listingCards', { greaterThan: 0 });
   });
 
-  test('should show user profile with balance and listings', async ({ steps }) => {
+  test('should show listing on profile after creating it', async ({ steps }) => {
+    // Create listing
+    await steps.click('Navigation', 'sellLink');
+    await steps.waitForNetworkIdle();
+    await steps.selectDropdown('CreateListingPage', 'bookSelect', { type: DropdownSelectType.INDEX, index: 2 });
+    await steps.selectDropdown('CreateListingPage', 'conditionSelect', { type: DropdownSelectType.VALUE, value: 'FAIR' });
+    await steps.fill('CreateListingPage', 'priceInput', '5.00');
+    await steps.click('CreateListingPage', 'createButton');
+    await steps.waitForNetworkIdle();
+
+    // Check profile page
     await steps.click('Navigation', 'profileLink');
     await steps.waitForNetworkIdle();
-    await steps.verifyPresence('ProfilePage', 'profilePage');
-    await steps.verifyText('ProfilePage', 'username', undefined, { notEmpty: true });
-    await steps.verifyText('ProfilePage', 'email', undefined, { notEmpty: true });
-    await steps.verifyPresence('ProfilePage', 'balance');
+    await steps.verifyCount('ProfilePage', 'myListings', { greaterThan: 0 });
   });
 });

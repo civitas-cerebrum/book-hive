@@ -2,53 +2,69 @@
 **Date:** 2026-04-04
 **App:** http://localhost:7547
 **Total findings:** 1
-**New bugs:** 1 | **Regression candidates:** 0 | **Undocumented quirks:** 0 | **Known but untested:** 0
+**New bugs:** 1 | **Regression candidates:** 0 | **Resolved since last run:** 1
 
 ## Summary by Severity
 | Severity | Count | Categories |
 |----------|-------|------------|
-| Critical | 0     | —          |
-| High     | 1     | Authentication error handling |
-| Medium   | 0     | —          |
-| Low      | 0     | —          |
+| Critical | 0     | -          |
+| High     | 1     | Checkout error handling |
+| Medium   | 0     | -          |
+| Low      | 0     | -          |
 
-## Findings
+## Active Findings
 
-### [BUG-001] Login form does not display error message on invalid credentials
+### [BUG-003] Insufficient balance checkout shows no error message
 **Severity:** High
-**Category:** Authentication error handling
-**Phase discovered:** 1a (Element Probing)
-**Page:** LoginPage — `/login`
-**Reproduction test:** `tests/e2e/tests/bug-discovery/element-bugs.spec.ts:20`
+**Category:** Checkout error handling
+**Page:** CartPage - `/cart`
+**Reproduction test:** `tests/e2e/tests/bug-discovery/validation-bugs.spec.ts`
+
 **Steps:**
-1. Navigate to /login
-2. Enter an invalid email (e.g., "invalid@email.com")
-3. Enter an invalid password (e.g., "wrongpassword")
-4. Click "Sign In"
-5. Observe the page
+1. Login as `testuser1@bookhive.test` (balance: $100.00)
+2. Add multiple expensive books to cart (total exceeding $100)
+3. Navigate to `/cart`
+4. Click the **Checkout** button
+5. Observe the page behavior
 
-**Expected:** An error message such as "Invalid credentials" or "Login failed" should appear below the form heading, informing the user that their credentials are incorrect.
+**Expected:** An error message (e.g., "Insufficient balance") should appear, and the user should remain on the cart page with clear feedback about why checkout failed.
 
-**Actual:** The login form reloads with empty fields and NO error message is displayed. The user receives zero feedback about why their login attempt failed.
+**Actual:** The Checkout button briefly shows "Processing..." then returns to "Checkout". No error message is shown. The user receives zero feedback about why the checkout failed.
 
 **Root Cause Analysis:**
-The axios response interceptor in `frontend/src/services/api.js` (lines 8-16) intercepts ALL 401 responses and performs `window.location.href = '/login'`. When the login API returns a 401 for invalid credentials, this interceptor fires BEFORE the `LoginPage` component's catch block can set the error state. The `window.location.href` assignment triggers a full browser page reload (not a React Router navigation), which destroys the entire React component tree, including any error state that might have been briefly set.
+In `frontend/src/pages/CartPage.jsx` (lines 30-38), the `handleCheckout` function has a `try/finally` block but **no `catch` block**:
 
-**Impact:** Users who enter incorrect credentials have no way to know what went wrong. They see an empty login form and may think the application is broken or their account doesn't exist.
-
-**Suggested Fix:** The 401 interceptor should exclude the `/auth/login` endpoint from the redirect logic. For example:
 ```javascript
-if (error.response?.status === 401 && !error.config.url.includes('/auth/login')) {
-  window.location.href = '/login';
-}
+const handleCheckout = async () => {
+  setChecking(true);
+  try {
+    const res = await api.post('/orders');
+    navigate(`/orders/${res.data.id}`);
+  } finally {
+    setChecking(false);
+  }
+};
 ```
 
-**Screenshot:** See `tests/e2e/evidence/BUG-001.png`
+When the backend returns an error for insufficient balance, the promise rejection propagates past the `try` block. Since there is no `catch`, the error is silently swallowed. The `finally` block resets the button state, leaving the user stuck with no feedback.
+
+**Impact:** Users who attempt to purchase books exceeding their balance get no indication of what went wrong. They may repeatedly click Checkout thinking the app is broken.
+
+**Evidence:** Screenshot committed to `tests/e2e/evidence/BUG-003.png`.
+Full visual report with video playback available as Playwright Report CI artifact.
+
+---
+
+## Resolved Findings
+
+### [BUG-001] Login form error message (RESOLVED)
+**Previous status:** High - Login with invalid credentials showed no error message
+**Current status:** RESOLVED - The error message "Invalid credentials" now displays correctly via `[data-testid="login-error"]`. The reproduction test passes consistently. The axios 401 interceptor correctly skips redirect when already on `/login`.
 
 ---
 
 ## Coverage Notes
 - Pages probed: 10/10 (all routes)
-- Flows tested: Login, signup, browse, cart, checkout, orders, marketplace listing, profile
-- Categories covered: Boundary inputs, state transitions, form validation, empty states, authentication, protected routes
+- Flows tested: Login, signup, browse, search, cart, checkout, orders, marketplace listing, profile
+- Categories covered: Boundary inputs, state transitions, form validation, empty states, authentication, protected routes, XSS injection, negative values, insufficient balance
 - Areas not probed: Return order flow (requires specific time-window), multi-user concurrent scenarios

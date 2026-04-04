@@ -3,12 +3,14 @@ import { test, expect } from '../fixtures/base';
 test.describe('Orders Page', () => {
   test.describe.configure({ timeout: 60_000 });
 
-  test.beforeEach(async ({ steps }) => {
+  test.beforeEach(async ({ steps, page }) => {
     await steps.navigateTo('/login');
     await steps.fill('LoginPage', 'emailInput', 'testuser1@bookhive.test');
     await steps.fill('LoginPage', 'passwordInput', 'Test1234!');
     await steps.click('LoginPage', 'signInButton');
     await steps.verifyPresence('NavBar', 'cartLink');
+    // Stabilised: clear cart via API before each test to prevent accumulated items from prior tests
+    await page.request.delete('http://localhost:8080/api/cart');
   });
 
   test('displays orders page heading', async ({ steps }) => {

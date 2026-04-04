@@ -3,13 +3,15 @@ import { test, expect } from '../fixtures/base';
 test.describe('Cart & Checkout Flow', () => {
   test.describe.configure({ timeout: 60_000 });
 
-  test.beforeEach(async ({ steps }) => {
-    // Login first
+  test.beforeEach(async ({ steps, page }) => {
+    // Stabilised: clear cart via API before each test to prevent state leaking between tests
     await steps.navigateTo('/login');
     await steps.fill('LoginPage', 'emailInput', 'testuser1@bookhive.test');
     await steps.fill('LoginPage', 'passwordInput', 'Test1234!');
     await steps.click('LoginPage', 'signInButton');
     await steps.verifyPresence('NavBar', 'cartLink');
+    // Clear any leftover cart items from previous tests
+    await page.request.delete('http://localhost:8080/api/cart');
   });
 
   test('shows empty cart initially', async ({ steps }) => {

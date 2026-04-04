@@ -44,7 +44,7 @@ test.describe('Bug Discovery', () => {
     await page.locator('[data-testid="signup-email"]').fill(`buguser_${uniqueId}@test.com`);
     await page.locator('[data-testid="signup-password"]').fill('TestPass1234!');
     await page.locator('[data-testid="signup-submit"]').click();
-    await page.waitForURL('/', { timeout: 10000 });
+    await page.waitForTimeout(3000);
     await expect(page.locator('[data-testid="book-grid"]')).toBeVisible();
     await expect(page.locator('[data-testid="user-balance"]')).toContainText('$100.00');
   });

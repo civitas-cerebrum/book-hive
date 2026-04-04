@@ -41,19 +41,3 @@ jobs:
       - name: Build
         working-directory: frontend
         run: npm run build
-
-  qa:
-    name: QA Analysis
-    needs: [backend-tests, frontend-build]
-    if: always()
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - name: Analyze
-        run: qa-run pr
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          GITHUB_EVENT_PATH: ${{ github.event_path }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}

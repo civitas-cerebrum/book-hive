@@ -1,0 +1,32 @@
+name: QA Agent — Test Discovery
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly Monday 6am UTC
+
+jobs:
+  discovery:
+    name: QA Agent — Test Discovery
+    runs-on: self-hosted
+    timeout-minutes: 120
+
+    steps:
+      - name: Trigger QA Agent
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST http://localhost:3001/trigger \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"repo\": \"${{ github.repository }}\",
+              \"mode\": \"discover\"
+            }")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "Response: $BODY (HTTP $HTTP_CODE)"
+
+          if [ "$HTTP_CODE" -ge 400 ]; then
+            echo "QA Agent service returned error"
+            exit 1
+          fi

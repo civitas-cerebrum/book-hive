@@ -1,24 +1,17 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: '.',
   timeout: 60_000,
   expect: { timeout: 10_000 },
   fullyParallel: false,
-  retries: 2,
+  retries: 0,
   workers: 1,
-  reporter: [['html', { open: 'never' }]],
+  reporter: 'html',
   use: {
     baseURL: 'http://localhost:7547',
+    trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    trace: 'retain-on-failure',
-    headless: true,
+    video: 'on',
   },
-  projects: [
-    {
-      name: 'chromium',
-      use: { browserName: 'chromium' },
-    },
-  ],
 });

@@ -1,11 +1,11 @@
 {
-  "name": "bookhive-e2e",
+  "name": "e2e",
   "version": "1.0.0",
-  "description": "E2E test suite for BookHive application",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
-    "test:debug": "npx playwright test --debug",
     "report": "npx playwright show-report"
   },
   "keywords": [],

@@ -1,0 +1,64 @@
+name: QA Agent — PR Review
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  qa-review:
+    name: QA Agent — PR Review
+    runs-on: self-hosted
+    timeout-minutes: 60
+
+    steps:
+      - name: QA Agent — PR Review
+        run: |
+          # Trigger the QA Agent
+          RESPONSE=$(curl -s -X POST http://localhost:3001/trigger \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"repo\": \"${{ github.repository }}\",
+              \"mode\": \"pr\",
+              \"prNumber\": ${{ github.event.pull_request.number }},
+              \"baseBranch\": \"${{ github.event.pull_request.base.ref }}\",
+              \"headBranch\": \"${{ github.event.pull_request.head.ref }}\"
+            }")
+
+          RUN_ID=$(echo "$RESPONSE" | python3 -c "import json,sys; print(json.load(sys.stdin).get('runId',''))" 2>/dev/null)
+
+          if [ -z "$RUN_ID" ]; then
+            echo "Failed to trigger QA Agent: $RESPONSE"
+            exit 1
+          fi
+
+          # Poll and stream progress — single source of truth from /runs/:id
+          LAST_COUNT=0
+          while true; do
+            STATUS=$(curl -s http://localhost:3001/runs/$RUN_ID 2>/dev/null)
+            RUN_STATUS=$(echo "$STATUS" | python3 -c "import json,sys; print(json.load(sys.stdin).get('status',''))" 2>/dev/null)
+
+            # Print new progress lines
+            CURRENT_COUNT=$(echo "$STATUS" | python3 -c "import json,sys; print(len(json.load(sys.stdin).get('progress',[])))" 2>/dev/null)
+
+            if [ "$CURRENT_COUNT" -gt "$LAST_COUNT" ]; then
+              echo "$STATUS" | python3 -c "
+          import json,sys
+          lines = json.load(sys.stdin).get('progress',[])
+          for line in lines[$LAST_COUNT:]:
+              print(line)
+          "
+              LAST_COUNT=$CURRENT_COUNT
+            fi
+
+            if [ "$RUN_STATUS" = "completed" ] || [ "$RUN_STATUS" = "failed" ]; then
+              echo ""
+              if [ "$RUN_STATUS" = "failed" ]; then
+                echo "QA Agent run failed"
+                exit 1
+              fi
+              break
+            fi
+
+            sleep 10
+          done

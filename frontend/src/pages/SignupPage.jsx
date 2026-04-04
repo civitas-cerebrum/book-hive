@@ -13,7 +13,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
 
   const validateUsername = (name) => {
-    if (name.includes('<script>')) return 'Username cannot contain script tags';
+    if (/<[^>]*>/i.test(name)) return 'Username cannot contain HTML tags';
     if (name.length < 3) return 'Username must be at least 3 characters';
     return null;
   };

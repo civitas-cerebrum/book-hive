@@ -3,6 +3,11 @@ import { test, expect } from '../fixtures/base';
 test.describe('Balance Tracking', () => {
   test.describe.configure({ timeout: 60_000 });
 
+  test.beforeAll(async () => {
+    // Reset database to ensure clean balance state
+    await fetch('http://localhost:8080/api/reset', { method: 'POST' });
+  });
+
   test('balance decreases after purchase', async ({ steps }) => {
     await steps.navigateTo('/login');
     await steps.fill('LoginPage', 'emailInput', 'testuser1@bookhive.test');

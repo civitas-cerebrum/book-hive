@@ -3,6 +3,11 @@ import { test, expect } from '../fixtures/base';
 test.describe('Order Detail & Return', () => {
   test.describe.configure({ timeout: 60_000 });
 
+  test.beforeAll(async () => {
+    // Reset database to ensure clean balance state for order tests
+    await fetch('http://localhost:8080/api/reset', { method: 'POST' });
+  });
+
   test('order detail page shows order information', async ({ steps }) => {
     // Login and create an order
     await steps.navigateTo('/login');

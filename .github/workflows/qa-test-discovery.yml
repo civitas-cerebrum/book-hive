@@ -1,0 +1,22 @@
+name: QA Agent — Test Discovery
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly Monday 6am UTC
+
+jobs:
+  discovery:
+    name: Trigger QA Agent
+    runs-on: self-hosted
+    timeout-minutes: 1
+
+    steps:
+      - name: Trigger
+        run: |
+          curl -s -X POST http://localhost:3001/trigger \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"repo\": \"${{ github.repository }}\",
+              \"mode\": \"discover\"
+            }" || true

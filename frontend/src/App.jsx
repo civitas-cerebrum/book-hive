@@ -38,6 +38,13 @@ export default function App() {
                   <Route path="/orders/:id" element={<ProtectedRoute><OrderDetailPage /></ProtectedRoute>} />
                   <Route path="/marketplace/sell" element={<ProtectedRoute><CreateListingPage /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+                  <Route path="*" element={
+                    <div style={{padding: '2rem', textAlign: 'center'}}>
+                      <h1>Page Not Found</h1>
+                      <p>The page you're looking for doesn't exist.</p>
+                      <a href="/">Go Home</a>
+                    </div>
+                  } />
                 </Routes>
               </main>
             </div>

@@ -27,11 +27,18 @@ export default function CartPage() {
     return sum + (book ? book.price * item.quantity : 0);
   }, 0);
 
+  const [error, setError] = useState(null);
+
   const handleCheckout = async () => {
     setChecking(true);
+    setError(null);
     try {
       const res = await api.post('/orders');
+      await clearCart();
       navigate(`/orders/${res.data.id}`);
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Checkout failed. Please try again.';
+      setError(msg);
     } finally {
       setChecking(false);
     }
@@ -59,6 +66,7 @@ export default function CartPage() {
         <div className={styles.total}>
           Total: <span className={styles.totalAmount} data-testid="cart-total">${total.toFixed(2)}</span>
         </div>
+        {error && <div className={styles.error} data-testid="cart-error">{error}</div>}
         <button className={styles.checkoutBtn} data-testid="checkout-btn"
                 onClick={handleCheckout} disabled={checking}>
           {checking ? 'Processing...' : 'Checkout'}

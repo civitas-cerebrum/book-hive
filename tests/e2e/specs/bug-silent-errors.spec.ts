@@ -1,12 +1,10 @@
 /**
  * Bug Reproduction: Silent Error Handling
  *
- * Tests document frontend pages that swallow API errors without showing
- * feedback to the user. These are real UX bugs where the user gets zero
- * indication that an action failed.
+ * Tests verify error handling behavior across frontend pages.
  *
- * BUGS REPRODUCED:
- * 1. CartPage checkout failure — no error message shown (no catch block)
+ * STATUS:
+ * 1. CartPage checkout failure — FIXED: error message now shown (catch block added)
  * 2. ListingCard buy failure — no error message shown (no catch block)
  * 3. OrderDetailPage return failure — no error message shown (no catch block)
  */
@@ -51,7 +49,7 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     await context.clearCookies();
   });
 
-  test('@bug silent-error: insufficient balance checkout shows no error to user', async ({ page }) => {
+  test('@bug silent-error: insufficient balance checkout shows error to user', async ({ page }) => {
     // Create a user with $0 balance (new signups get $0)
     await page.goto('http://localhost:7547/signup');
     await page.getByTestId('signup-username').fill('pooruser');
@@ -74,19 +72,13 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     await page.waitForSelector('[data-testid="cart-page"]');
     await page.waitForSelector('[data-testid="checkout-btn"]');
 
-    // Record console errors before checkout
-    const consoleLogs: string[] = [];
-    page.on('console', msg => {
-      if (msg.type() === 'error') consoleLogs.push(msg.text());
-    });
-
     // Click checkout — should fail with "Insufficient balance"
     await page.getByTestId('checkout-btn').click();
     await page.waitForTimeout(2000);
 
-    // BUG: No error message visible on the page
-    const errorVisible = await page.getByTestId('cart-error').isVisible().catch(() => false);
-    expect(errorVisible).toBeFalsy(); // No error element exists in the DOM
+    // FIXED: Error message is now visible on the page
+    const errorEl = page.getByTestId('cart-error');
+    await expect(errorEl).toBeVisible({ timeout: 5000 });
 
     // Page stays on /cart (did not navigate to order)
     expect(page.url()).toContain('/cart');
@@ -94,12 +86,9 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     // Cart items are still visible (checkout didn't succeed)
     const itemCount = await page.locator('[data-testid^="cart-item-"]:not([data-testid*="title"]):not([data-testid*="price"])').count();
     expect(itemCount).toBeGreaterThan(0);
-
-    // The error was silently swallowed — only visible in console
-    // (handleCheckout has try/finally but no catch)
   });
 
-  test('@bug silent-error: network error during checkout shows no error', async ({ page, context }) => {
+  test('@bug silent-error: network error during checkout shows error feedback', async ({ page, context }) => {
     // Login as user with balance (use resilient helper)
     await resetAndLogin(page, context);
 
@@ -128,9 +117,9 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     await page.getByTestId('checkout-btn').click();
     await page.waitForTimeout(2000);
 
-    // BUG: No error feedback — page returns to idle state silently
-    const errorVisible = await page.getByTestId('cart-error').isVisible().catch(() => false);
-    expect(errorVisible).toBeFalsy();
+    // FIXED: Error feedback is now shown to the user
+    const errorEl = page.getByTestId('cart-error');
+    await expect(errorEl).toBeVisible({ timeout: 5000 });
 
     // Button returns to "Checkout" text (not stuck on "Processing...")
     const btnText = await page.getByTestId('checkout-btn').textContent();

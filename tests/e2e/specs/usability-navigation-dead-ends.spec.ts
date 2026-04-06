@@ -39,13 +39,11 @@ test.describe('@usability navigation-dead-end: 404 handling', () => {
       await steps.verifyPresence('Navigation', 'sidebar');
     });
 
-    await test.step('Document: No 404 page component exists — main area is blank', async () => {
-      // BUG FINDING: App.jsx has no <Route path="*"> catch-all.
-      // Unknown routes render sidebar + empty <main>. No 404 message,
-      // no "Page not found" text, no link to homepage.
+    await test.step('Verify 404 page shows "Page Not Found" message', async () => {
+      // FIXED: App.jsx now has a <Route path="*"> catch-all with a 404 page.
       const mainContent = await page.locator('main').textContent();
-      // Main area will be empty or have minimal content
-      expect(mainContent?.trim().length ?? 0).toBeLessThan(10);
+      expect(mainContent).toContain('Page Not Found');
+      expect(mainContent).toContain("doesn't exist");
     });
 
     await test.step('Verify user can still navigate home via sidebar', async () => {

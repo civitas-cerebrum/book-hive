@@ -33,17 +33,17 @@ test.describe('Search & Filter — URL State', () => {
     await steps.verifyPresence('HomePage', 'noBooks');
   });
 
-  // ─── Search Input Does NOT Sync from URL ──────────────────────
+  // ─── Search Input Syncs from URL ──────────────────────────────
 
-  test('@url-state search input is empty when navigating directly to /?query=Dune', async ({ steps, page }) => {
-    // BUG/UX-GAP: SearchBar uses local useState('') and does not read from URL params
+  test('@url-state search input reflects query when navigating directly to /?query=Dune', async ({ steps, page }) => {
+    // FIXED: SearchBar now reads from URL search params via useSearchParams
     await steps.navigateTo('/?query=Dune');
     await page.waitForTimeout(500);
     // Results show correctly
     await steps.verifyCount('HomePage', 'bookCard', { exactly: 1 });
-    // But the search input does not reflect the URL query
+    // Search input now reflects the URL query
     const inputValue = await steps.getInputValue('HomePage', 'searchInput');
-    expect(inputValue).toBe(''); // This is a documented UX gap
+    expect(inputValue).toBe('Dune');
   });
 
   // ─── Browser Back/Forward with Search ──────────────────────────

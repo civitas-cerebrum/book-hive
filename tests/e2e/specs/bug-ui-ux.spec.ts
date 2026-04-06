@@ -3,9 +3,9 @@
  *
  * Tests document UI/UX bugs discovered through adversarial probing.
  *
- * BUGS REPRODUCED:
- * 1. No 404 page — unknown routes render blank main content area
- * 2. Search input not synced with URL — navigating to /?query=X shows results but empty input
+ * STATUS:
+ * 1. 404 page — FIXED: catch-all route now renders "Page Not Found"
+ * 2. Search input synced with URL — FIXED: SearchBar reads from useSearchParams
  * 3. Sidebar genre NavLink doesn't reset page state — stale pagination on genre switch
  * 4. Wrong error message for already-returned orders
  * 5. Floating point display issue in balance after marketplace transactions
@@ -14,34 +14,34 @@
 
 import { test, expect } from '../fixtures/base';
 
-test.describe('@bug UI/UX: Missing 404 page', () => {
-  test('@bug ui-ux: unknown route renders blank main area with no guidance', async ({ page }) => {
+test.describe('@bug UI/UX: 404 page', () => {
+  test('@bug ui-ux: unknown route shows Page Not Found message', async ({ page }) => {
     await page.goto('http://localhost:7547/nonexistent-route-xyz');
 
-    // The main content area exists but is empty
+    // FIXED: The main content area now shows a 404 message
     const main = page.locator('main');
     await expect(main).toBeVisible();
 
-    // BUG: No "Page not found" message — just a blank area
     const mainText = await main.textContent();
-    expect(mainText?.trim()).toBe(''); // Empty! No 404 message
+    expect(mainText).toContain('Page Not Found');
+    expect(mainText).toContain("doesn't exist");
 
-    // Sidebar is still present for navigation recovery (mitigating factor)
+    // Sidebar is still present for navigation recovery
     const sidebar = page.locator('nav');
     await expect(sidebar).toBeVisible();
   });
 
-  test('@bug ui-ux: deeply nested unknown route also renders blank', async ({ page }) => {
+  test('@bug ui-ux: deeply nested unknown route shows Page Not Found', async ({ page }) => {
     await page.goto('http://localhost:7547/admin/settings/users/advanced');
 
     const main = page.locator('main');
     const mainText = await main.textContent();
-    expect(mainText?.trim()).toBe(''); // BUG: No 404 page
+    expect(mainText).toContain('Page Not Found'); // FIXED: 404 page now rendered
   });
 });
 
-test.describe('@bug UI/UX: Search input not synced with URL', () => {
-  test('@bug ui-ux: navigating to search URL shows results but search input is empty', async ({ page }) => {
+test.describe('@bug UI/UX: Search input synced with URL', () => {
+  test('@bug ui-ux: navigating to search URL shows results and search input reflects query', async ({ page }) => {
     // Navigate directly to a search URL
     await page.goto('http://localhost:7547/?query=Dune');
     await page.waitForSelector('[data-testid="home-page"]');
@@ -54,10 +54,10 @@ test.describe('@bug UI/UX: Search input not synced with URL', () => {
     const bookCount = await page.locator('[data-testid^="book-card-"]').count();
     expect(bookCount).toBeGreaterThan(0);
 
-    // BUG: Search input is empty — doesn't reflect the URL query parameter
+    // FIXED: Search input now reflects the URL query parameter
     const searchInput = page.getByTestId('search-input');
     const inputValue = await searchInput.inputValue();
-    expect(inputValue).toBe(''); // Bug: should show "Dune"
+    expect(inputValue).toBe('Dune');
   });
 });
 

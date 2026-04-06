@@ -366,19 +366,16 @@ test.describe('@usability error-feedback: Checkout errors', () => {
       await page.waitForTimeout(2000);
     });
 
-    await test.step('Document: CartPage has NO error display for checkout failures', async () => {
-      // BUG FINDING: The CartPage.jsx handleCheckout() has no catch block
-      // and no error state variable. Checkout failures are silently swallowed.
-      // The user sees the button return to "Checkout" with no feedback.
-      // We verify the page remains functional (not crashed).
+    await test.step('Verify CartPage shows error feedback for checkout failure', async () => {
+      // FIXED: CartPage.jsx now has a catch block that sets error state
+      // and displays the error message to the user.
       await steps.verifyPresence('CartPage', 'cartPage');
       // Cart items should still be visible (error didn't clear them)
       await steps.verifyCount('CartPage', 'cartItem', { greaterThan: 0 });
-      // The cart-error element does NOT exist in source code
-      const errorVisible = await page.locator('[data-testid="cart-error"]').isVisible().catch(() => false);
-      // This assertion documents the missing error feedback
-      // errorVisible will be false — this is a known UX gap
-      expect(errorVisible).toBe(false);
+      // The cart-error element now shows the API error message
+      const errorEl = page.locator('[data-testid="cart-error"]');
+      await expect(errorEl).toBeVisible({ timeout: 5000 });
+      await expect(errorEl).toContainText('Insufficient balance');
     });
   });
 

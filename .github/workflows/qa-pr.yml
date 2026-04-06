@@ -3,7 +3,7 @@ name: QA Agent — PR Review
 on:
   pull_request:
     branches: [main]
-    types: [opened]
+    types: [opened, synchronize]
 
 jobs:
   qa-review:
@@ -12,7 +12,36 @@ jobs:
     timeout-minutes: 1
 
     steps:
+      - name: Check if review should run
+        id: check
+        run: |
+          # Get the head commit details
+          COMMIT=$(curl -s -H "Authorization: token ${{ github.token }}" \
+            "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}")
+          
+          AUTHOR=$(echo "$COMMIT" | jq -r '.commit.author.name // ""')
+          PARENTS=$(echo "$COMMIT" | jq '.parents | length')
+          MESSAGE=$(echo "$COMMIT" | jq -r '.commit.message // ""')
+          
+          echo "Author: $AUTHOR, Parents: $PARENTS"
+          
+          # Skip if: bot commit, merge commit (sync with main), or [skip qa] in message
+          if [[ "$AUTHOR" == "QA Agent" || "$AUTHOR" == *"[bot]"* || "$AUTHOR" == "civitas-cerebrum" ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Skipping — bot commit by $AUTHOR"
+          elif [[ "$PARENTS" -gt 1 ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Skipping — merge commit (branch sync)"
+          elif [[ "$MESSAGE" == *"[skip qa]"* ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Skipping — [skip qa] in commit message"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "Proceeding — developer commit by $AUTHOR"
+          fi
+
       - name: Trigger
+        if: steps.check.outputs.skip != 'true'
         run: |
           curl -s -X POST http://localhost:3001/trigger \
             -H "Content-Type: application/json" \

@@ -1,0 +1,25 @@
+name: QA Agent — PR Review
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  qa-review:
+    name: Trigger QA Agent
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 1
+
+    steps:
+      - name: Trigger
+        run: |
+          curl -s -X POST http://localhost:3001/trigger \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"repo\": \"${{ github.repository }}\",
+              \"mode\": \"pr\",
+              \"prNumber\": ${{ github.event.pull_request.number }},
+              \"baseBranch\": \"${{ github.event.pull_request.base.ref }}\",
+              \"headBranch\": \"${{ github.event.pull_request.head.ref }}\"
+            }" || true

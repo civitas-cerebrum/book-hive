@@ -18,9 +18,16 @@
         { "elementName": "logoutBtn", "selector": { "css": "[data-testid='logout-btn']" } },
         { "elementName": "cartBadge", "selector": { "css": "[data-testid='cart-badge']" } },
         { "elementName": "userBalance", "selector": { "css": "[data-testid='user-balance']" } },
+        { "elementName": "themeToggle", "selector": { "css": "[data-testid='theme-toggle']" } },
         { "elementName": "mobileSearchBtn", "selector": { "css": "[data-testid='mobile-search-btn']" } },
         { "elementName": "mobileCartBtn", "selector": { "css": "[data-testid='mobile-cart-btn']" } },
-        { "elementName": "cartBadgeMobile", "selector": { "css": "[data-testid='cart-badge-mobile']" } }
+        { "elementName": "cartBadgeMobile", "selector": { "css": "[data-testid='cart-badge-mobile']" } },
+        { "elementName": "genreFilterFiction", "selector": { "css": "[data-testid='genre-filter-fiction']" } },
+        { "elementName": "genreFilterSciFi", "selector": { "css": "[data-testid='genre-filter-sci-fi']" } },
+        { "elementName": "genreFilterNonFiction", "selector": { "css": "[data-testid='genre-filter-non-fiction']" } },
+        { "elementName": "genreFilterBiography", "selector": { "css": "[data-testid='genre-filter-biography']" } },
+        { "elementName": "genreFilterFantasy", "selector": { "css": "[data-testid='genre-filter-fantasy']" } },
+        { "elementName": "genreFilterMystery", "selector": { "css": "[data-testid='genre-filter-mystery']" } }
       ]
     },
     {
@@ -28,19 +35,26 @@
       "elements": [
         { "elementName": "homePage", "selector": { "css": "[data-testid='home-page']" } },
         { "elementName": "searchInput", "selector": { "css": "[data-testid='search-input']" } },
+        { "elementName": "genreChips", "selector": { "css": "[data-testid='genre-chips']" } },
+        { "elementName": "genreChipAll", "selector": { "css": "[data-testid='genre-chip-all']" } },
+        { "elementName": "genreChipFiction", "selector": { "css": "[data-testid='genre-chip-fiction']" } },
+        { "elementName": "genreChipSciFi", "selector": { "css": "[data-testid='genre-chip-sci-fi']" } },
+        { "elementName": "genreChipNonFiction", "selector": { "css": "[data-testid='genre-chip-non-fiction']" } },
+        { "elementName": "genreChipBiography", "selector": { "css": "[data-testid='genre-chip-biography']" } },
+        { "elementName": "genreChipFantasy", "selector": { "css": "[data-testid='genre-chip-fantasy']" } },
+        { "elementName": "genreChipMystery", "selector": { "css": "[data-testid='genre-chip-mystery']" } },
         { "elementName": "bookGrid", "selector": { "css": "[data-testid='book-grid']" } },
         { "elementName": "bookCard", "selector": { "css": "[data-testid^='book-card-']" } },
+        { "elementName": "bookTitle", "selector": { "css": "[data-testid^='book-title-']" } },
+        { "elementName": "bookAuthor", "selector": { "css": "[data-testid^='book-author-']" } },
+        { "elementName": "bookGenre", "selector": { "css": "[data-testid^='book-genre-']" } },
+        { "elementName": "bookPrice", "selector": { "css": "[data-testid^='book-price-']" } },
+        { "elementName": "addToCartBtn", "selector": { "css": "[data-testid^='add-to-cart-book-']" } },
         { "elementName": "loadingBooks", "selector": { "css": "[data-testid='loading-books']" } },
         { "elementName": "noBooks", "selector": { "css": "[data-testid='no-books']" } },
         { "elementName": "pagination", "selector": { "css": "[data-testid='pagination']" } },
         { "elementName": "nextPage", "selector": { "css": "[data-testid='next-page']" } },
-        { "elementName": "prevPage", "selector": { "css": "[data-testid='prev-page']" } },
-        { "elementName": "genreChipFiction", "selector": { "css": "[data-testid='genre-filter-fiction']" } },
-        { "elementName": "genreChipSciFi", "selector": { "css": "[data-testid='genre-filter-sci-fi']" } },
-        { "elementName": "genreChipNonFiction", "selector": { "css": "[data-testid='genre-filter-non-fiction']" } },
-        { "elementName": "genreChipBiography", "selector": { "css": "[data-testid='genre-filter-biography']" } },
-        { "elementName": "genreChipFantasy", "selector": { "css": "[data-testid='genre-filter-fantasy']" } },
-        { "elementName": "genreChipMystery", "selector": { "css": "[data-testid='genre-filter-mystery']" } }
+        { "elementName": "prevPage", "selector": { "css": "[data-testid='prev-page']" } }
       ]
     },
     {
@@ -89,10 +103,17 @@
       "elements": [
         { "elementName": "cartPage", "selector": { "css": "[data-testid='cart-page']" } },
         { "elementName": "cartEmpty", "selector": { "css": "[data-testid='cart-empty']" } },
+        { "elementName": "cartItem", "selector": { "css": "[data-testid^='cart-item-']:not([data-testid*='title']):not([data-testid*='price'])" } },
+        { "elementName": "cartItemTitle", "selector": { "css": "[data-testid^='cart-item-title-']" } },
+        { "elementName": "cartItemPrice", "selector": { "css": "[data-testid^='cart-item-price-']" } },
+        { "elementName": "cartQtyMinus", "selector": { "css": "[data-testid^='cart-qty-minus-']" } },
+        { "elementName": "cartQty", "selector": { "css": "[data-testid^='cart-qty-']:not([data-testid*='minus']):not([data-testid*='plus'])" } },
+        { "elementName": "cartQtyPlus", "selector": { "css": "[data-testid^='cart-qty-plus-']" } },
+        { "elementName": "cartRemove", "selector": { "css": "[data-testid^='cart-remove-']" } },
         { "elementName": "cartTotal", "selector": { "css": "[data-testid='cart-total']" } },
         { "elementName": "cartClear", "selector": { "css": "[data-testid='cart-clear']" } },
         { "elementName": "checkoutBtn", "selector": { "css": "[data-testid='checkout-btn']" } },
-        { "elementName": "cartItem", "selector": { "css": "[data-testid^='cart-item-']" } }
+        { "elementName": "cartError", "selector": { "css": "[data-testid='cart-error']" } }
       ]
     },
     {
@@ -101,6 +122,7 @@
         { "elementName": "ordersPage", "selector": { "css": "[data-testid='orders-page']" } },
         { "elementName": "noOrders", "selector": { "css": "[data-testid='no-orders']" } },
         { "elementName": "orderCard", "selector": { "css": "[data-testid^='order-card-']" } },
+        { "elementName": "orderStatus", "selector": { "css": "[data-testid^='order-status-']" } },
         { "elementName": "loading", "selector": { "css": "[data-testid='loading']" } }
       ]
     },
@@ -108,8 +130,12 @@
       "name": "OrderDetailPage",
       "elements": [
         { "elementName": "orderDetailPage", "selector": { "css": "[data-testid='order-detail-page']" } },
-        { "elementName": "orderTotal", "selector": { "css": "[data-testid='order-total']" } },
+        { "elementName": "orderStatus", "selector": { "css": "[data-testid^='order-status-']" } },
         { "elementName": "orderItem", "selector": { "css": "[data-testid^='order-item-']" } },
+        { "elementName": "orderTotal", "selector": { "css": "[data-testid='order-total']" } },
+        { "elementName": "returnCountdown", "selector": { "css": "[data-testid='return-countdown']" } },
+        { "elementName": "returnOrderBtn", "selector": { "css": "[data-testid^='return-order-']" } },
+        { "elementName": "returnExpired", "selector": { "css": "[data-testid='return-expired']" } },
         { "elementName": "loading", "selector": { "css": "[data-testid='loading']" } },
         { "elementName": "notFound", "selector": { "css": "[data-testid='not-found']" } }
       ]
@@ -120,6 +146,10 @@
         { "elementName": "marketplacePage", "selector": { "css": "[data-testid='marketplace-page']" } },
         { "elementName": "noListings", "selector": { "css": "[data-testid='no-listings']" } },
         { "elementName": "listingCard", "selector": { "css": "[data-testid^='listing-card-']" } },
+        { "elementName": "listingTitle", "selector": { "css": "[data-testid^='listing-title-']" } },
+        { "elementName": "listingConditionBadge", "selector": { "css": "[data-testid^='listing-condition-badge-']" } },
+        { "elementName": "listingPrice", "selector": { "css": "[data-testid^='listing-price-']" } },
+        { "elementName": "listingBuyBtn", "selector": { "css": "[data-testid^='listing-buy-']" } },
         { "elementName": "loading", "selector": { "css": "[data-testid='loading']" } }
       ]
     },

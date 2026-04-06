@@ -1,0 +1,449 @@
+{
+  "journeys": [
+    {
+      "id": "browse-and-purchase-happy",
+      "type": "happy",
+      "goal": "Browse the book catalog, add a book to cart, and complete a purchase",
+      "steps": [
+        { "page": "/", "action": "view book catalog", "next": "/" },
+        { "page": "/", "action": "click book card", "next": "/books/:id" },
+        { "page": "/books/:id", "action": "click 'Add to Cart'", "next": "/books/:id" },
+        { "page": "/books/:id", "action": "click 'Cart' in sidebar", "next": "/cart" },
+        { "page": "/cart", "action": "click 'Checkout'", "next": "/orders/:id" },
+        { "page": "/orders/:id", "action": "view order confirmation with COMPLETED status", "next": null }
+      ]
+    },
+    {
+      "id": "signup-happy",
+      "type": "happy",
+      "goal": "Create a new account and be redirected to the home page",
+      "steps": [
+        { "page": "/signup", "action": "fill username, email, password", "next": "/signup" },
+        { "page": "/signup", "action": "click 'Create Account'", "next": "/" }
+      ]
+    },
+    {
+      "id": "login-happy",
+      "type": "happy",
+      "goal": "Sign in with valid credentials and be redirected to the home page",
+      "steps": [
+        { "page": "/login", "action": "fill email and password", "next": "/login" },
+        { "page": "/login", "action": "click 'Sign In'", "next": "/" }
+      ]
+    },
+    {
+      "id": "search-filter-happy",
+      "type": "happy",
+      "goal": "Search for books by title/author or filter by genre",
+      "steps": [
+        { "page": "/", "action": "type search query in search box and press Enter", "next": "/?query=<term>" },
+        { "page": "/?query=<term>", "action": "view filtered search results", "next": null }
+      ]
+    },
+    {
+      "id": "genre-filter-happy",
+      "type": "happy",
+      "goal": "Filter books by a specific genre via sidebar category links",
+      "steps": [
+        { "page": "/", "action": "click genre link in sidebar (e.g. Fiction)", "next": "/?genre=<genre>" },
+        { "page": "/?genre=<genre>", "action": "view genre-filtered book list", "next": null }
+      ]
+    },
+    {
+      "id": "marketplace-buy-happy",
+      "type": "happy",
+      "goal": "Purchase a second-hand book from the marketplace",
+      "steps": [
+        { "page": "/marketplace", "action": "view marketplace listings", "next": "/marketplace" },
+        { "page": "/marketplace", "action": "click 'Buy' on a listing", "next": "/marketplace" }
+      ]
+    },
+    {
+      "id": "marketplace-sell-happy",
+      "type": "happy",
+      "goal": "Create a new marketplace listing to sell a book",
+      "steps": [
+        { "page": "/marketplace/sell", "action": "select book from dropdown", "next": "/marketplace/sell" },
+        { "page": "/marketplace/sell", "action": "select condition", "next": "/marketplace/sell" },
+        { "page": "/marketplace/sell", "action": "enter price", "next": "/marketplace/sell" },
+        { "page": "/marketplace/sell", "action": "click 'Create Listing'", "next": "/marketplace" }
+      ]
+    },
+    {
+      "id": "order-return-happy",
+      "type": "happy",
+      "goal": "Return a recently completed order within the 10-minute return window",
+      "steps": [
+        { "page": "/orders", "action": "click on a COMPLETED order", "next": "/orders/:id" },
+        { "page": "/orders/:id", "action": "click 'Return Order' (within return window)", "next": "/orders/:id" },
+        { "page": "/orders/:id", "action": "view order status changed to RETURNED", "next": null }
+      ]
+    },
+    {
+      "id": "login-error",
+      "type": "error",
+      "goal": "Attempt login with invalid credentials and see an error message",
+      "steps": [
+        { "page": "/login", "action": "fill wrong email/password", "next": "/login" },
+        { "page": "/login", "action": "click 'Sign In'", "next": "/login" },
+        { "page": "/login", "action": "see 'Invalid credentials' error message", "next": null }
+      ]
+    },
+    {
+      "id": "signup-error-duplicate",
+      "type": "error",
+      "goal": "Attempt signup with an already registered email and see an error",
+      "steps": [
+        { "page": "/signup", "action": "fill form with existing email", "next": "/signup" },
+        { "page": "/signup", "action": "click 'Create Account'", "next": "/signup" },
+        { "page": "/signup", "action": "see 'Email already registered' error message", "next": null }
+      ]
+    },
+    {
+      "id": "order-return-expired-error",
+      "type": "error",
+      "goal": "View a completed order whose return window has expired",
+      "steps": [
+        { "page": "/orders", "action": "click on a COMPLETED order (old)", "next": "/orders/:id" },
+        { "page": "/orders/:id", "action": "see 'Return window expired' message, no return button", "next": null }
+      ]
+    },
+    {
+      "id": "empty-cart-checkout-edge",
+      "type": "edge",
+      "goal": "Visit the cart page when the cart is empty — checkout should be unavailable",
+      "steps": [
+        { "page": "/cart", "action": "view empty cart", "next": "/cart" },
+        { "page": "/cart", "action": "see 'Your cart is empty' message, no checkout button", "next": null }
+      ]
+    },
+    {
+      "id": "search-no-results-edge",
+      "type": "edge",
+      "goal": "Search for a term that matches no books",
+      "steps": [
+        { "page": "/", "action": "type nonsense query and press Enter", "next": "/?query=<term>" },
+        { "page": "/?query=<term>", "action": "see 'No books found' message", "next": null }
+      ]
+    },
+    {
+      "id": "book-detail-unauthenticated-edge",
+      "type": "edge",
+      "goal": "View a book detail page as a guest — no Add to Cart button should appear",
+      "steps": [
+        { "page": "/books/:id", "action": "view book details without being logged in", "next": null }
+      ]
+    },
+    {
+      "id": "cart-access-permission",
+      "type": "permission-gated",
+      "goal": "Guest user tries to access /cart and is redirected to login",
+      "steps": [
+        { "page": "/cart", "action": "navigate to /cart as guest", "next": "/login" },
+        { "page": "/login", "action": "see login form (redirected from /cart)", "next": null }
+      ]
+    },
+    {
+      "id": "orders-access-permission",
+      "type": "permission-gated",
+      "goal": "Guest user tries to access /orders and is redirected to login",
+      "steps": [
+        { "page": "/orders", "action": "navigate to /orders as guest", "next": "/login" },
+        { "page": "/login", "action": "see login form (redirected from /orders)", "next": null }
+      ]
+    },
+    {
+      "id": "sell-access-permission",
+      "type": "permission-gated",
+      "goal": "Guest user tries to access /marketplace/sell and is redirected to login",
+      "steps": [
+        { "page": "/marketplace/sell", "action": "navigate to /marketplace/sell as guest", "next": "/login" },
+        { "page": "/login", "action": "see login form (redirected from /marketplace/sell)", "next": null }
+      ]
+    },
+    {
+      "id": "profile-access-permission",
+      "type": "permission-gated",
+      "goal": "Guest user tries to access /profile and is redirected to login",
+      "steps": [
+        { "page": "/profile", "action": "navigate to /profile as guest", "next": "/login" },
+        { "page": "/login", "action": "see login form (redirected from /profile)", "next": null }
+      ]
+    },
+    {
+      "id": "checkout-interrupted",
+      "type": "interrupted",
+      "goal": "User adds items to cart, logs out, logs back in, and verifies cart persists",
+      "steps": [
+        { "page": "/", "action": "click 'Add to Cart' on a book", "next": "/" },
+        { "page": "/", "action": "click 'Logout'", "next": "/login" },
+        { "page": "/login", "action": "log back in with same credentials", "next": "/" },
+        { "page": "/", "action": "click 'Cart' in sidebar", "next": "/cart" },
+        { "page": "/cart", "action": "verify previously added items are still in cart", "next": null }
+      ]
+    },
+    {
+      "id": "browse-to-buy-branching",
+      "type": "branching",
+      "goal": "From the home page, user can branch into catalog purchase OR marketplace purchase",
+      "steps": [
+        { "page": "/", "action": "decision: click book card (catalog) OR click Marketplace link", "next": "/books/:id OR /marketplace" }
+      ]
+    },
+    {
+      "id": "browse-to-buy-branch-catalog",
+      "type": "branching",
+      "goal": "From home, take the catalog purchase branch",
+      "steps": [
+        { "page": "/", "action": "click a book card", "next": "/books/:id" },
+        { "page": "/books/:id", "action": "click 'Add to Cart'", "next": "/books/:id" },
+        { "page": "/books/:id", "action": "navigate to cart", "next": "/cart" },
+        { "page": "/cart", "action": "click 'Checkout'", "next": "/orders/:id" }
+      ]
+    },
+    {
+      "id": "browse-to-buy-branch-marketplace",
+      "type": "branching",
+      "goal": "From home, take the marketplace purchase branch",
+      "steps": [
+        { "page": "/", "action": "click 'Marketplace' in sidebar", "next": "/marketplace" },
+        { "page": "/marketplace", "action": "click 'Buy' on a listing", "next": "/marketplace" }
+      ]
+    },
+    {
+      "id": "order-view-branching",
+      "type": "branching",
+      "goal": "From order detail, user branches into returning the order OR accepting it",
+      "steps": [
+        { "page": "/orders", "action": "click on a recent COMPLETED order", "next": "/orders/:id" },
+        { "page": "/orders/:id", "action": "decision: click 'Return Order' OR wait for window to expire", "next": "/orders/:id" }
+      ]
+    }
+  ],
+  "intersections": [
+    {
+      "page": "/",
+      "journeys": [
+        "browse-and-purchase-happy",
+        "login-happy",
+        "signup-happy",
+        "search-filter-happy",
+        "genre-filter-happy",
+        "checkout-interrupted",
+        "browse-to-buy-branching",
+        "browse-to-buy-branch-catalog",
+        "browse-to-buy-branch-marketplace"
+      ]
+    },
+    {
+      "page": "/login",
+      "journeys": [
+        "login-happy",
+        "login-error",
+        "cart-access-permission",
+        "orders-access-permission",
+        "sell-access-permission",
+        "profile-access-permission",
+        "checkout-interrupted"
+      ]
+    },
+    {
+      "page": "/books/:id",
+      "journeys": [
+        "browse-and-purchase-happy",
+        "book-detail-unauthenticated-edge",
+        "browse-to-buy-branch-catalog"
+      ]
+    },
+    {
+      "page": "/cart",
+      "journeys": [
+        "browse-and-purchase-happy",
+        "empty-cart-checkout-edge",
+        "cart-access-permission",
+        "checkout-interrupted",
+        "browse-to-buy-branch-catalog"
+      ]
+    },
+    {
+      "page": "/orders/:id",
+      "journeys": [
+        "browse-and-purchase-happy",
+        "order-return-happy",
+        "order-return-expired-error",
+        "browse-to-buy-branch-catalog",
+        "order-view-branching"
+      ]
+    },
+    {
+      "page": "/orders",
+      "journeys": [
+        "order-return-happy",
+        "order-return-expired-error",
+        "orders-access-permission",
+        "order-view-branching"
+      ]
+    },
+    {
+      "page": "/marketplace",
+      "journeys": [
+        "marketplace-buy-happy",
+        "marketplace-sell-happy",
+        "browse-to-buy-branch-marketplace"
+      ]
+    },
+    {
+      "page": "/signup",
+      "journeys": [
+        "signup-happy",
+        "signup-error-duplicate"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "page": "/",
+      "auth": "public",
+      "actions": [
+        "search-books",
+        "filter-by-genre",
+        "click-book-card",
+        "add-to-cart",
+        "paginate-next",
+        "paginate-previous",
+        "navigate-marketplace",
+        "navigate-login",
+        "navigate-signup",
+        "navigate-cart",
+        "navigate-orders",
+        "navigate-sell",
+        "navigate-profile",
+        "logout",
+        "toggle-theme"
+      ],
+      "dataDepends": ["books-catalog"],
+      "errorStates": ["no-books-found", "api-unreachable"]
+    },
+    {
+      "page": "/books/:id",
+      "auth": "public",
+      "actions": [
+        "add-to-cart",
+        "navigate-back-to-catalog"
+      ],
+      "dataDepends": ["book-by-id"],
+      "errorStates": ["book-not-found", "out-of-stock"]
+    },
+    {
+      "page": "/login",
+      "auth": "public",
+      "actions": [
+        "fill-email",
+        "fill-password",
+        "submit-login",
+        "navigate-to-signup"
+      ],
+      "dataDepends": [],
+      "errorStates": ["invalid-credentials"]
+    },
+    {
+      "page": "/signup",
+      "auth": "public",
+      "actions": [
+        "fill-username",
+        "fill-email",
+        "fill-password",
+        "submit-signup",
+        "navigate-to-login"
+      ],
+      "dataDepends": [],
+      "errorStates": ["email-already-registered"]
+    },
+    {
+      "page": "/marketplace",
+      "auth": "public",
+      "actions": [
+        "buy-listing",
+        "view-listings"
+      ],
+      "dataDepends": ["marketplace-listings"],
+      "errorStates": ["no-listings-available", "insufficient-balance"]
+    },
+    {
+      "page": "/marketplace/sell",
+      "auth": "required",
+      "actions": [
+        "select-book",
+        "select-condition",
+        "enter-price",
+        "submit-listing"
+      ],
+      "dataDepends": ["books-catalog", "user-session"],
+      "errorStates": ["missing-fields", "invalid-price"]
+    },
+    {
+      "page": "/cart",
+      "auth": "required",
+      "actions": [
+        "increment-quantity",
+        "decrement-quantity",
+        "remove-item",
+        "clear-cart",
+        "checkout"
+      ],
+      "dataDepends": ["cart-items", "user-session"],
+      "errorStates": ["empty-cart", "insufficient-balance", "out-of-stock"]
+    },
+    {
+      "page": "/orders",
+      "auth": "required",
+      "actions": [
+        "click-order-card"
+      ],
+      "dataDepends": ["user-orders", "user-session"],
+      "errorStates": ["no-orders"]
+    },
+    {
+      "page": "/orders/:id",
+      "auth": "required",
+      "actions": [
+        "return-order"
+      ],
+      "dataDepends": ["order-by-id", "user-session"],
+      "errorStates": ["return-window-expired", "order-not-found", "already-returned"]
+    },
+    {
+      "page": "/profile",
+      "auth": "required",
+      "actions": [
+        "view-balance",
+        "view-listings"
+      ],
+      "dataDepends": ["user-session", "user-listings"],
+      "errorStates": ["no-active-listings"]
+    },
+    {
+      "page": "/?query=<term>",
+      "auth": "public",
+      "actions": [
+        "click-book-card",
+        "clear-search",
+        "paginate"
+      ],
+      "dataDepends": ["books-search-results"],
+      "errorStates": ["no-books-found"]
+    },
+    {
+      "page": "/?genre=<genre>",
+      "auth": "public",
+      "actions": [
+        "click-book-card",
+        "add-to-cart",
+        "paginate",
+        "search-within-genre"
+      ],
+      "dataDepends": ["books-by-genre"],
+      "errorStates": ["no-books-in-genre"]
+    }
+  ]
+}

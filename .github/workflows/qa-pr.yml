@@ -3,36 +3,16 @@ name: QA Agent — PR Review
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize]
+    types: [opened]
 
 jobs:
   qa-review:
     name: Trigger QA Agent
     runs-on: [self-hosted, macOS]
     timeout-minutes: 1
-    # Skip if the latest commit was made by the QA Agent (prevents infinite loop)
-    if: >-
-      !contains(github.event.pull_request.head.sha && github.event.head_commit.message || '', '[skip qa]') &&
-      github.actor != 'civitas-cerebrum[bot]'
 
     steps:
-      - name: Check last commit author
-        id: check
-        run: |
-          AUTHOR=$(curl -s -H "Authorization: token ${{ github.token }}" \
-            "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}" \
-            | jq -r '.commit.author.name // ""')
-          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
-          if [[ "$AUTHOR" == "QA Agent" || "$AUTHOR" == *"[bot]"* || "$AUTHOR" == "civitas-cerebrum" ]]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-            echo "Skipping — commit by QA Agent ($AUTHOR)"
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-            echo "Proceeding — commit by $AUTHOR"
-          fi
-
       - name: Trigger
-        if: steps.check.outputs.skip != 'true'
         run: |
           curl -s -X POST http://localhost:3001/trigger \
             -H "Content-Type: application/json" \

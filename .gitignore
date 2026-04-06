@@ -43,3 +43,4 @@ tests/e2e/blob-report/
 
 # Magnum Opus
 .magnum-opus/
+/.playwright-mcp

@@ -4,6 +4,12 @@ import styles from './SearchBar.module.css';
 export default function SearchBar({ onSearch }) {
   const [value, setValue] = useState('');
 
+  const handleChange = (e) => {
+    const next = e.target.value;
+    setValue(next);
+    onSearch(next);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch(value);
@@ -18,7 +24,7 @@ export default function SearchBar({ onSearch }) {
         type="text"
         placeholder="Search books by title or author..."
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={handleChange}
       />
     </form>
   );

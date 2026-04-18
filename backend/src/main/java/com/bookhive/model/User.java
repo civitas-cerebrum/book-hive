@@ -21,12 +21,14 @@ public class User {
 
     public User() {}
 
+    public static final double STARTER_BALANCE = 100.0;
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.createdAt = Instant.now();
-        this.balance = 0.0;
+        this.balance = STARTER_BALANCE;
     }
 
     public String getId() { return id; }

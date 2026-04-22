@@ -23,7 +23,10 @@
         { "elementName": "cartBadge", "selector": { "css": "[data-testid='cart-badge']" } },
         { "elementName": "genreFilterFiction", "selector": { "css": "[data-testid='genre-filter-fiction']" } },
         { "elementName": "genreFilterSciFi", "selector": { "css": "[data-testid='genre-filter-sci-fi']" } },
-        { "elementName": "genreFilterFantasy", "selector": { "css": "[data-testid='genre-filter-fantasy']" } }
+        { "elementName": "genreFilterNonFiction", "selector": { "css": "[data-testid='genre-filter-non-fiction']" } },
+        { "elementName": "genreFilterBiography", "selector": { "css": "[data-testid='genre-filter-biography']" } },
+        { "elementName": "genreFilterFantasy", "selector": { "css": "[data-testid='genre-filter-fantasy']" } },
+        { "elementName": "genreFilterMystery", "selector": { "css": "[data-testid='genre-filter-mystery']" } }
       ]
     },
     {
@@ -42,7 +45,10 @@
         { "elementName": "bookGenres", "selector": { "css": "[data-testid^='book-genre-']" } },
         { "elementName": "bookTitles", "selector": { "css": "[data-testid^='book-title-']" } },
         { "elementName": "bookTitleBook001", "selector": { "css": "[data-testid='book-title-book-001']" } },
+        { "elementName": "addToCartBook001", "selector": { "css": "[data-testid='add-to-cart-book-001']" } },
         { "elementName": "addToCartBook002", "selector": { "css": "[data-testid='add-to-cart-book-002']" } },
+        { "elementName": "addToCartBook003", "selector": { "css": "[data-testid='add-to-cart-book-003']" } },
+        { "elementName": "bookCardBook001", "selector": { "css": "[data-testid='book-card-book-001']" } },
         { "elementName": "pagination", "selector": { "css": "[data-testid='pagination']" } },
         { "elementName": "paginationPrevious", "selector": { "css": "[data-testid='pagination'] button:has-text('Previous')" } },
         { "elementName": "paginationNext", "selector": { "css": "[data-testid='pagination'] button:has-text('Next')" } },

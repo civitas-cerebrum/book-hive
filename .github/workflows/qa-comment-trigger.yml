@@ -1,0 +1,70 @@
+name: QA Agent — Comment Re-trigger
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  qa-rerun:
+    name: Re-trigger QA Agent on @magnum-opus-qa mention
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 1
+    if: >
+      github.event.issue.pull_request != null &&
+      contains(github.event.comment.body, '@magnum-opus-qa')
+
+    steps:
+      - name: Authorize commenter
+        id: auth
+        run: |
+          AUTHOR="${{ github.event.comment.user.login }}"
+          ASSOC="${{ github.event.comment.author_association }}"
+
+          # Skip bot/agent comments to prevent loops
+          if [[ "$AUTHOR" == "magnum-opus-qa" || "$AUTHOR" == *"[bot]"* ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Skipping — comment by bot ($AUTHOR)"
+            exit 0
+          fi
+
+          # Only allow owners/members/collaborators to re-trigger
+          if [[ "$ASSOC" == "OWNER" || "$ASSOC" == "MEMBER" || "$ASSOC" == "COLLABORATOR" ]]; then
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "Authorized — $AUTHOR ($ASSOC)"
+          else
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Skipping — $AUTHOR has association $ASSOC (need OWNER/MEMBER/COLLABORATOR)"
+          fi
+
+      - name: Acknowledge with reaction
+        if: steps.auth.outputs.skip != 'true'
+        run: |
+          curl -s -X POST \
+            -H "Authorization: token ${{ github.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions" \
+            -d '{"content":"eyes"}' || true
+
+      - name: Resolve PR head/base branches
+        if: steps.auth.outputs.skip != 'true'
+        id: pr
+        run: |
+          PR=$(curl -s -H "Authorization: token ${{ github.token }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.issue.number }}")
+          BASE=$(echo "$PR" | jq -r '.base.ref')
+          HEAD=$(echo "$PR" | jq -r '.head.ref')
+          echo "base=$BASE" >> $GITHUB_OUTPUT
+          echo "head=$HEAD" >> $GITHUB_OUTPUT
+
+      - name: Trigger QA Agent
+        if: steps.auth.outputs.skip != 'true'
+        run: |
+          curl -s -X POST http://localhost:3001/trigger \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"repo\": \"${{ github.repository }}\",
+              \"mode\": \"pr\",
+              \"prNumber\": ${{ github.event.issue.number }},
+              \"baseBranch\": \"${{ steps.pr.outputs.base }}\",
+              \"headBranch\": \"${{ steps.pr.outputs.head }}\"
+            }" || true

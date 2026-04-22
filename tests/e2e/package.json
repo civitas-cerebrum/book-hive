@@ -1,0 +1,20 @@
+{
+  "name": "book-hive-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BookHive end-to-end test suite (element-interactions + Playwright)",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "seed": "curl -s -X POST http://localhost:8080/api/reset"
+  },
+  "devDependencies": {
+    "@civitas-cerebrum/element-interactions": "^0.2.8",
+    "@civitas-cerebrum/element-repository": "^0.1.8",
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.6.0"
+  }
+}

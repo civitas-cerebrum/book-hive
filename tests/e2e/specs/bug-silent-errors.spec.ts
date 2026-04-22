@@ -51,8 +51,9 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     await context.clearCookies();
   });
 
-  test('@bug silent-error: insufficient balance checkout shows no error to user', async ({ page }) => {
-    // Create a user with $0 balance (new signups get $0)
+  test('@bug silent-error: insufficient balance checkout surfaces an error to the user', async ({ page }) => {
+    // New users now start with a $100 balance. Drain by filling the cart
+    // past $100 via the API, then attempt checkout in the UI.
     await page.goto('http://localhost:7547/signup');
     await page.getByTestId('signup-username').fill('pooruser');
     await page.getByTestId('signup-email').fill('poor@test.com');
@@ -60,13 +61,13 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     await page.getByTestId('signup-submit').click();
     await page.waitForSelector('[data-testid="home-page"]');
 
-    // Verify $0 balance
+    // Verify starter balance (new users get $100)
     const balance = await page.getByTestId('user-balance').textContent();
-    expect(balance).toContain('$0.00');
+    expect(balance).toContain('$100.00');
 
-    // Add book to cart via API (avoids needing to navigate)
+    // Book-009 (Dune, $16.99) × 7 = $118.93 → exceeds $100
     await page.request.post('http://localhost:8080/api/cart/items', {
-      data: { bookId: 'book-001', quantity: 1 },
+      data: { bookId: 'book-009', quantity: 7 },
     });
 
     // Navigate to cart
@@ -74,19 +75,14 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     await page.waitForSelector('[data-testid="cart-page"]');
     await page.waitForSelector('[data-testid="checkout-btn"]');
 
-    // Record console errors before checkout
-    const consoleLogs: string[] = [];
-    page.on('console', msg => {
-      if (msg.type() === 'error') consoleLogs.push(msg.text());
-    });
-
     // Click checkout — should fail with "Insufficient balance"
     await page.getByTestId('checkout-btn').click();
     await page.waitForTimeout(2000);
 
-    // BUG: No error message visible on the page
-    const errorVisible = await page.getByTestId('cart-error').isVisible().catch(() => false);
-    expect(errorVisible).toBeFalsy(); // No error element exists in the DOM
+    // FIXED: checkout-error is now surfaced on the page
+    await page.waitForSelector('[data-testid="checkout-error"]', { state: 'visible' });
+    const errorText = await page.getByTestId('checkout-error').textContent();
+    expect(errorText?.toLowerCase() ?? '').toMatch(/balance|insufficient|funds/);
 
     // Page stays on /cart (did not navigate to order)
     expect(page.url()).toContain('/cart');
@@ -94,12 +90,9 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     // Cart items are still visible (checkout didn't succeed)
     const itemCount = await page.locator('[data-testid^="cart-item-"]:not([data-testid*="title"]):not([data-testid*="price"])').count();
     expect(itemCount).toBeGreaterThan(0);
-
-    // The error was silently swallowed — only visible in console
-    // (handleCheckout has try/finally but no catch)
   });
 
-  test('@bug silent-error: network error during checkout shows no error', async ({ page, context }) => {
+  test('@bug silent-error: network error during checkout surfaces an error', async ({ page, context }) => {
     // Login as user with balance (use resilient helper)
     await resetAndLogin(page, context);
 
@@ -128,9 +121,10 @@ test.describe('@bug Silent Error: Checkout failure shows no error', () => {
     await page.getByTestId('checkout-btn').click();
     await page.waitForTimeout(2000);
 
-    // BUG: No error feedback — page returns to idle state silently
-    const errorVisible = await page.getByTestId('cart-error').isVisible().catch(() => false);
-    expect(errorVisible).toBeFalsy();
+    // FIXED: an error message is now visible when the API fails
+    await page.waitForSelector('[data-testid="checkout-error"]', { state: 'visible' });
+    const errorText = await page.getByTestId('checkout-error').textContent();
+    expect((errorText ?? '').trim().length).toBeGreaterThan(0);
 
     // Button returns to "Checkout" text (not stuck on "Processing...")
     const btnText = await page.getByTestId('checkout-btn').textContent();

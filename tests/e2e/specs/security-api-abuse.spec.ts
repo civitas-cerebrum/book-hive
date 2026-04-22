@@ -20,8 +20,10 @@ test.describe('@security API abuse: mass assignment', () => {
     });
     if (response.status() === 200) {
       const data = await response.json();
-      // Balance should be 0 (default), not the injected value
-      expect(data.balance).toBe(0.0);
+      // Balance should be the server-side default (100 starter balance),
+      // NOT the 999999 the attacker tried to set via mass assignment.
+      expect(data.balance).not.toBe(999999);
+      expect(data.balance).toBe(100.0);
     }
     await ctx.dispose();
   });

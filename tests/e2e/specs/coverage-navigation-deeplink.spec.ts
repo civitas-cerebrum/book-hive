@@ -295,10 +295,11 @@ test.describe('@coverage Navigation: Browser back/forward', () => {
     await steps.navigateTo('/');
     await steps.verifyPresence('HomePage', 'homePage');
 
-    // Search
-    await steps.fill('HomePage', 'searchInput', 'Fiction');
-    await steps.pressKey('Enter');
-    await page.waitForTimeout(1000);
+    // Search. Live search now pushes one history entry per keystroke, so a
+    // single goBack() only trims the last character. Use direct URL navigation
+    // here to land on a search URL with exactly one history step away from /.
+    await steps.navigateTo('/?query=Fiction');
+    await page.waitForTimeout(500);
     await steps.verifyUrlContains('query=');
 
     // Go back

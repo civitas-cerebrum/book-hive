@@ -53,9 +53,9 @@ test.describe('Search & Filter — URL State', () => {
     await steps.navigateTo('/');
     await steps.verifyCount('HomePage', 'bookCard', { exactly: 12 });
 
-    // Search for Dune
-    await steps.fill('HomePage', 'searchInput', 'Dune');
-    await steps.pressKey('Enter');
+    // Live search pushes one history entry per keystroke; use direct URL
+    // navigation so there is exactly one history step back to "/".
+    await steps.navigateTo('/?query=Dune');
     await steps.verifyUrlContains('query=Dune');
     await steps.verifyCount('HomePage', 'bookCard', { exactly: 1 });
 

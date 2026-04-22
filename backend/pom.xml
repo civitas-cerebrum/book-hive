@@ -76,9 +76,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!--
+              4.20.0 adds Ubuntu 24.04 (Noble) + Mongo 7.0 platform mappings.
+              4.11.0 fails in CI with:
+                "could not resolve package for GenericFeatureAwareVersion{7.0.0}
+                 :Platform{operatingSystem=Linux, ..., distribution=Ubuntu}"
+              on ubuntu-latest runners.
+            -->
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo.spring3x</artifactId>
-            <version>4.11.0</version>
+            <version>4.20.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

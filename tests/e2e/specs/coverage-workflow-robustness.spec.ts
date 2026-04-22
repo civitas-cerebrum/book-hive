@@ -18,7 +18,7 @@ test.describe('@coverage Workflow: Full signup-to-purchase journey', () => {
     await page.request.post('http://localhost:8080/api/reset');
   });
 
-  test('@coverage workflow: new user signs up → browses → views book detail → but cannot buy (balance $0)', async ({ steps, page }) => {
+  test('@coverage workflow: new user signs up → browses → views book detail → buys with starter balance', async ({ steps, page }) => {
     const timestamp = Date.now();
     const email = `newuser${timestamp}@test.com`;
 
@@ -30,9 +30,9 @@ test.describe('@coverage Workflow: Full signup-to-purchase journey', () => {
     await steps.click('SignupPage', 'signupSubmit');
     await steps.verifyPresence('HomePage', 'homePage');
 
-    // New user should have $0 balance
+    // New users start with a $100 starter balance
     const balance = await steps.getText('Navigation', 'userBalance');
-    expect(balance).toContain('$0.00');
+    expect(balance).toContain('$100.00');
 
     // Browse catalog
     await steps.verifyCount('HomePage', 'bookCard', { greaterThan: 0 });
@@ -50,18 +50,12 @@ test.describe('@coverage Workflow: Full signup-to-purchase journey', () => {
     await steps.verifyPresence('CartPage', 'cartPage');
     await steps.verifyCount('CartPage', 'cartItem', { greaterThan: 0 });
 
-    // Checkout (will fail due to $0 balance — but no error UI is a known bug)
-    const checkoutBtn = page.locator('[data-testid="checkout-btn"]');
-    if (await checkoutBtn.isVisible()) {
-      await checkoutBtn.click();
-      await page.waitForTimeout(2000);
+    // Checkout should succeed now that the user has enough balance
+    await page.locator('[data-testid="checkout-btn"]').click();
 
-      // Known bug: no error UI for checkout failure
-      // Should either show error or stay on cart page
-      const url = page.url();
-      // If still on cart page, checkout failed (expected with $0 balance)
-      // If navigated to orders, there's a potential data issue
-    }
+    // Lands on the order detail page with a COMPLETED order
+    await page.waitForURL(/\/orders\/[0-9a-f]+/);
+    await page.waitForSelector('[data-testid="order-detail-page"]');
   });
 });
 

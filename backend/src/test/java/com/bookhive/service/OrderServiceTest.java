@@ -3,6 +3,7 @@ package com.bookhive.service;
 import com.bookhive.dto.CartItemRequest;
 import com.bookhive.model.Book;
 import com.bookhive.model.Order;
+import com.bookhive.model.User;
 import com.bookhive.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +19,14 @@ class OrderServiceTest {
     @Autowired private BookRepository bookRepository;
     @Autowired private CartItemRepository cartItemRepository;
     @Autowired private OrderRepository orderRepository;
+    @Autowired private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
         orderRepository.deleteAll();
         cartItemRepository.deleteAll();
         bookRepository.deleteAll();
+        userRepository.deleteAll();
         Book book = new Book();
         book.setId("book-001");
         book.setTitle("Test Book");
@@ -31,6 +34,9 @@ class OrderServiceTest {
         book.setPrice(9.99);
         book.setIsbn("978-0-0000-0001-0");
         bookRepository.save(book);
+        User user = new User("user1", "user1@example.com", "pw");
+        user.setId("user1");
+        userRepository.save(user);
     }
 
     @Test

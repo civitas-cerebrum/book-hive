@@ -9,7 +9,6 @@ export default function CartPage() {
   const { items, fetchCart, clearCart } = useCart();
   const navigate = useNavigate();
   const [checking, setChecking] = useState(false);
-  const [error, setError] = useState('');
   const [books, setBooks] = useState({});
 
   useEffect(() => { fetchCart(); }, [fetchCart]);
@@ -30,12 +29,9 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     setChecking(true);
-    setError('');
     try {
       const res = await api.post('/orders');
       navigate(`/orders/${res.data.id}`);
-    } catch (e) {
-      setError(e.response?.data?.message || 'Checkout failed. Please try again.');
     } finally {
       setChecking(false);
     }
@@ -68,14 +64,6 @@ export default function CartPage() {
           {checking ? 'Processing...' : 'Checkout'}
         </button>
       </div>
-      {error && (
-        <div data-testid="checkout-error" role="alert" style={{
-          marginTop: 12, padding: 12, borderRadius: 6,
-          background: 'rgba(239, 68, 68, 0.12)', color: '#ef4444'
-        }}>
-          {error}
-        </div>
-      )}
     </div>
   );
 }

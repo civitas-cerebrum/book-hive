@@ -101,7 +101,8 @@
         { "elementName": "cartItems", "selector": { "css": "[data-testid^='cart-item-'][data-testid$=''][data-testid*='cart-item-'][data-testid]:not([data-testid*='title']):not([data-testid*='price']):not([data-testid*='qty']):not([data-testid*='remove'])" } },
         { "elementName": "cartTotal", "selector": { "css": "[data-testid='cart-total']" } },
         { "elementName": "checkoutBtn", "selector": { "css": "[data-testid='checkout-btn']" } },
-        { "elementName": "checkoutError", "selector": { "css": "[data-testid='checkout-error']" } }
+        { "elementName": "checkoutError", "selector": { "css": "[data-testid='checkout-error']" } },
+        { "elementName": "cartItemTitles", "selector": { "css": "[data-testid^='cart-item-title-']" } }
       ]
     },
     {

@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/base';
+import { DropdownSelectType } from '@civitas-cerebrum/element-interactions';
 import { TEST_USERS, resetAndSeed } from '../helpers/api';
 
 const FRONTEND = process.env.BOOKHIVE_URL ?? 'http://localhost:7547';
@@ -10,7 +11,6 @@ test.describe('J6 — Create a marketplace listing (P1)', () => {
 
   test('authed user lists a book; it appears on marketplace and profile', async ({
     context,
-    page,
     steps,
   }) => {
     // Log in via UI
@@ -24,10 +24,14 @@ test.describe('J6 — Create a marketplace listing (P1)', () => {
     await steps.navigateTo('/marketplace/sell');
     await steps.verifyPresence('createListingPage', 'CreateListingPage');
 
-    // Use raw Playwright selectOption — avoids importing DropdownSelectType which
-    // trips a Playwright transform-cache issue in this project on first compile.
-    await page.selectOption('[data-testid="listing-book-select"]', 'book-015');
-    await page.selectOption('[data-testid="listing-condition"]', 'LIKE_NEW');
+    await steps.selectDropdown('listingBookSelect', 'CreateListingPage', {
+      type: DropdownSelectType.VALUE,
+      value: 'book-015',
+    });
+    await steps.selectDropdown('listingCondition', 'CreateListingPage', {
+      type: DropdownSelectType.VALUE,
+      value: 'LIKE_NEW',
+    });
     await steps.fill('listingPrice', 'CreateListingPage', '9.25');
     await steps.click('listingCreate', 'CreateListingPage');
 

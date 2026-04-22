@@ -34,12 +34,12 @@ test.describe('J5 — Browse / filter / search / paginate (P1)', () => {
     await steps.verifyState('paginationPrevious', 'HomePage', 'enabled');
   });
 
-  test('search filters the grid by query (keystroke-driven debounce)', async ({ steps, page }) => {
+  test('search filters the grid by query (keystroke-driven debounce)', async ({ steps }) => {
     await steps.navigateTo('/');
-    // React's controlled input needs actual keystrokes to fire the debounced fetch.
-    const locator = page.getByTestId('search-input');
-    await locator.click();
-    await locator.pressSequentially('gatsby', { delay: 50 });
+    // React's controlled input needs actual keystrokes to fire the debounced fetch,
+    // so use typeSequentially (one character at a time) rather than fill().
+    await steps.click('searchInput', 'HomePage');
+    await steps.typeSequentially('searchInput', 'HomePage', 'gatsby', 50);
 
     // Only The Great Gatsby (book-002) should remain
     await steps.verifyCount('bookCards', 'HomePage', { exactly: 1 });

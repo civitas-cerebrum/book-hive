@@ -30,11 +30,11 @@ test.describe('Expansion — search by author', () => {
     await resetAndSeed();
   });
 
-  test('search finds books by author name, not just title', async ({ steps, page }) => {
+  test('search finds books by author name, not just title', async ({ steps }) => {
     await steps.navigateTo('/');
-    const input = page.getByTestId('search-input');
-    await input.click();
-    await input.pressSequentially('orwell', { delay: 50 });
+    // Keystroke-driven debounce — fill() doesn't trigger the backend fetch.
+    await steps.click('searchInput', 'HomePage');
+    await steps.typeSequentially('searchInput', 'HomePage', 'orwell', 50);
 
     // 1984 is George Orwell's work; Animal Farm is not in the seed,
     // so search for "orwell" should match exactly one book.

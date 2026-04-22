@@ -34,15 +34,14 @@ test.describe('Expansion — navigation & routing', () => {
     await steps.verifyText('bookDetailTitle', 'BookDetailPage', 'To Kill a Mockingbird');
   });
 
-  test('pagination Next is disabled on the last page (5/5)', async ({ steps, page }) => {
+  test('pagination Next is disabled on the last page (5/5)', async ({ steps }) => {
     await steps.navigateTo('/');
     // Click Next until we reach page 5, then verify the button disables
     for (let i = 0; i < 4; i++) {
       await steps.click('paginationNext', 'HomePage');
     }
     await steps.verifyTextContains('paginationInfo', 'HomePage', '5 / 5');
-    // Use raw playwright so we can assert a disabled attribute state
-    await expect(page.getByTestId('pagination').getByRole('button', { name: 'Next' })).toBeDisabled();
+    await steps.verifyState('paginationNext', 'HomePage', 'disabled');
   });
 
   test('unknown route renders the shell with an empty main area', async ({ steps, page }) => {

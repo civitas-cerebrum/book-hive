@@ -25,10 +25,9 @@ test.describe('J10 — Theme toggle + responsive layout (P2)', () => {
   });
 
   test('mobile viewport exposes the topbar hamburger and mobile buttons', async ({
-    page,
     steps,
   }) => {
-    await page.setViewportSize({ width: 400, height: 800 });
+    await steps.setViewport(400, 800);
     await steps.navigateTo('/');
     await steps.verifyState('topbar', 'Shell', 'visible');
     await steps.verifyState('sidebarToggle', 'Shell', 'visible');

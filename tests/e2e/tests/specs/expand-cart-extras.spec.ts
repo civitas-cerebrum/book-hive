@@ -8,7 +8,7 @@ test.describe('Expansion — cart extras', () => {
     await resetAndSeed();
   });
 
-  test('Add-to-Cart on a book card updates the cart-badge count', async ({ steps, page }) => {
+  test('Add-to-Cart on a book card updates the cart-badge count', async ({ steps }) => {
     await steps.navigateTo('/login');
     await steps.fill('loginEmail', 'LoginPage', TEST_USERS.user1.email);
     await steps.fill('loginPassword', 'LoginPage', TEST_USERS.user1.password);
@@ -31,9 +31,8 @@ test.describe('Expansion — cart extras', () => {
     // Cart page shows the three distinct titles — wait for the rows to hydrate
     await steps.navigateTo('/cart');
     await steps.verifyPresence('cartPage', 'CartPage');
-    const itemsLocator = page.locator('[data-testid^="cart-item-title-"]');
-    await expect(itemsLocator).toHaveCount(3);
-    const titles = await itemsLocator.allTextContents();
+    await steps.verifyCount('cartItemTitles', 'CartPage', { exactly: 3 });
+    const titles = await steps.getAll('cartItemTitles', 'CartPage');
     expect(new Set(titles).size).toBe(3);
   });
 

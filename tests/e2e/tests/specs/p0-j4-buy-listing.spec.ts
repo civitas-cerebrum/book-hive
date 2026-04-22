@@ -77,7 +77,7 @@ test.describe('J4 — Buy a marketplace listing (P0)', () => {
     });
     const { token } = (await meRes.json()) as { token: string };
     const listRes = await context.request.post(`${FRONTEND}/api/marketplace/listings`, {
-      data: { bookId: 'book-004', condition: 'FAIR', price: 8 },
+      data: { bookId: 'book-004', condition: 'GOOD', price: 8 },
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(listRes.ok()).toBeTruthy();

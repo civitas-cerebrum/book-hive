@@ -216,7 +216,7 @@ Total: 11 reachable URL patterns. Auth-gated: 5. External links: 0.
 
 ## Coverage Checkpoint
 
-Run: `npx playwright test` (2026-04-22) — **19/19 passing** across 12 spec files.
+Run: `npx playwright test` (2026-04-22) — **44/44 passing** across 16 spec files after Stage-5 coverage expansion (2 cycles). Baseline at end of onboarding was 19 tests across 12 specs.
 
 | Journey | Priority | Steps | Covered | Coverage | Spec | Status |
 |---|---|---|---|---|---|---|

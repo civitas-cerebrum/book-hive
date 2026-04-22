@@ -214,21 +214,29 @@ Total: 11 reachable URL patterns. Auth-gated: 5. External links: 0.
 - Return control requires a COMPLETED order inside the 10-minute window — must be seeded by checkout in-test.
 - `out-of-stock-{id}` card variant requires draining a book's stock to 0 — not supported by current helper endpoints; flag as coverage gap.
 
-## Coverage Checkpoint Template
+## Coverage Checkpoint
 
-To be filled after test-composer completes.
+Run: `npx playwright test` (2026-04-22) — **19/19 passing** across 12 spec files.
 
-| Journey | Priority | Steps | Covered | Coverage | Status |
-|---|---|---|---|---|---|
-| J1 Checkout | P0 | 9 | — | — | — |
-| J2 Return | P0 | 5 | — | — | — |
-| J3 Signup | P0 | 4 | — | — | — |
-| J4 Buy listing | P0 | 5 | — | — | — |
-| J5 Browse/search | P1 | 5 | — | — | — |
-| J6 Create listing | P1 | 4 | — | — | — |
-| J7 Cancel listing | P1 | 2 | — | — | — |
-| J8 Cart mgmt | P1 | 4 | — | — | — |
-| J9 Guest detail | P2 | 3 | — | — | — |
-| J10 Theme/responsive | P2 | 2 | — | — | — |
-| J11 Logout | P3 | 3 | — | — | — |
-| J12 Invalid login | P3 | 2 | — | — | — |
+| Journey | Priority | Steps | Covered | Coverage | Spec | Status |
+|---|---|---|---|---|---|---|
+| J1 Checkout | P0 | 9 | 9 | 100% | `p0-j1-checkout.spec.ts` (happy path + insufficient-balance) | Complete |
+| J2 Return | P0 | 5 | 5 | 100% | `p0-j2-return.spec.ts` | Complete |
+| J3 Signup | P0 | 4 | 4 | 100% | `p0-j3-signup.spec.ts` (happy path + duplicate email) | Complete |
+| J4 Buy listing | P0 | 5 | 5 | 100% | `p0-j4-buy-listing.spec.ts` (buy + own-listing no-buy) | Complete |
+| J5 Browse/search | P1 | 5 | 5 | 100% | `p1-j5-browse.spec.ts` (default, genre, pagination, search) | Complete |
+| J6 Create listing | P1 | 4 | 4 | 100% | `p1-j6-create-listing.spec.ts` | Complete |
+| J7 Cancel listing | P1 | 2 | 2 | 100% | `p1-j7-cancel-listing.spec.ts` | Complete |
+| J8 Cart mgmt | P1 | 4 | 4 | 100% | `p1-j8-cart.spec.ts` | Complete |
+| J9 Guest detail | P2 | 3 | 3 | 100% | `p2-j9-guest-detail.spec.ts` | Complete |
+| J10 Theme/responsive | P2 | 2 | 2 | 100% | `p2-j10-theme-responsive.spec.ts` | Complete |
+| J11 Logout | P3 | 3 | 3 | 100% | `p3-j11-logout.spec.ts` | Complete |
+| J12 Invalid login | P3 | 2 | 2 | 100% | `p3-j12-invalid-login.spec.ts` | Complete |
+
+### Open coverage gaps (follow-up work)
+
+- **`out-of-stock-{id}` card variant** — requires draining a book's stock to 0; no helper endpoint exists yet. Flagged in `app-context.md`.
+- **Window-expired return path for J2** — testing post-10-minute is impractical at the UI layer without time travel; could be added as an API-level test against `POST /api/orders/{id}/return` after a seeded, artificially old order.
+- **Console error on every page load** — noted during discovery; not a test failure but worth a bug-discovery pass.
+- **Condition enum drift** — README says EXCELLENT/GOOD/FAIR; current UI exposes NEW/LIKE_NEW/GOOD/FAIR. Tests use the UI's current values.
+- **Mobile checkout journey** — J1 covers desktop only; a mobile-viewport variant would be a low-cost addition.

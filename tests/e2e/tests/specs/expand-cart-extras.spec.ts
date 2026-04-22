@@ -28,10 +28,13 @@ test.describe('Expansion — cart extras', () => {
     await steps.click('addToCartBook003', 'HomePage');
     await steps.verifyText('cartBadge', 'Shell', '3');
 
-    // Cart page shows the three distinct titles
+    // Cart page shows the three distinct titles — wait for the rows to hydrate
     await steps.navigateTo('/cart');
-    const titles = await page.locator('[data-testid^="cart-item-title-"]').allTextContents();
-    expect(titles).toHaveLength(3);
+    await steps.verifyPresence('cartPage', 'CartPage');
+    const itemsLocator = page.locator('[data-testid^="cart-item-title-"]');
+    await expect(itemsLocator).toHaveCount(3);
+    const titles = await itemsLocator.allTextContents();
+    expect(new Set(titles).size).toBe(3);
   });
 
   test('multi-item checkout sums totals and deducts exactly once', async ({ context, steps, page }) => {
